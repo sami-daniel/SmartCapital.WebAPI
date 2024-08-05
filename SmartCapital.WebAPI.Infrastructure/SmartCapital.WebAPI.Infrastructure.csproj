@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmartCapital.WebAPI.Domain\SmartCapital.WebAPI.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
