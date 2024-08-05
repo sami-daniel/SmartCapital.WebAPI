@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartCapital.WebAPI", "SmartCapital.WebAPI\SmartCapital.WebAPI.csproj", "{C7EF4A2B-B58A-40A7-A579-0F3CF0A9DA1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCapital.WebAPI.Infrastructure", "SmartCapital.WebAPI.Infrastructure\SmartCapital.WebAPI.Infrastructure.csproj", "{F7703C8C-FCE1-4D9B-8475-863C713A6C0E}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCapital.WebAPI.Domain", "SmartCapital.WebAPI.Domain\SmartCapital.WebAPI.Domain.csproj", "{33F52CDB-A6B2-40F1-8D0B-245CEBB4332E}"
 EndProject
 Global
@@ -17,6 +19,14 @@ Global
 		{C7EF4A2B-B58A-40A7-A579-0F3CF0A9DA1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7EF4A2B-B58A-40A7-A579-0F3CF0A9DA1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7EF4A2B-B58A-40A7-A579-0F3CF0A9DA1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7703C8C-FCE1-4D9B-8475-863C713A6C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7703C8C-FCE1-4D9B-8475-863C713A6C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7703C8C-FCE1-4D9B-8475-863C713A6C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7703C8C-FCE1-4D9B-8475-863C713A6C0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33F52CDB-A6B2-40F1-8D0B-245CEBB4332E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33F52CDB-A6B2-40F1-8D0B-245CEBB4332E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33F52CDB-A6B2-40F1-8D0B-245CEBB4332E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33F52CDB-A6B2-40F1-8D0B-245CEBB4332E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
