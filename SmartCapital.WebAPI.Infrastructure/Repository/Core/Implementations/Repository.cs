@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartCapital.WebAPI.Domain.Repository.Interfaces;
+using SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace SmartCapital.WebAPI.Domain.Repository.Implementations
+namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
