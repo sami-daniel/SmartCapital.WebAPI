@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 
-namespace SmartCapital.WebAPI.Domain.Repository.Interfaces
+namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        public Task<IEnumerable<TEntity>> GetAsync (Expression<Func<TEntity, bool>>? filter = null,
+        public Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             string includeProperties = "");
-        public Task<TEntity?> GetByIDAsync (object ID);
+        public Task<TEntity?> GetByIDAsync(object ID);
 
         public Task InsertAsync(TEntity entity);
 
