@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 using SmartCapital.WebAPI.Domain.Domain;
 
 namespace SmartCapital.WebAPI.Infrastructure.Data.Contexts;
