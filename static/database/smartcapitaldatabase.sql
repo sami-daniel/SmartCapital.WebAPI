@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS `Profiles` (
 ENGINE = InnoDB;
 
 SHOW WARNINGS;
+CREATE UNIQUE INDEX `ProfileName_UNIQUE` ON `Profiles` (`ProfileName` ASC) VISIBLE;
+
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `Categories`
@@ -126,12 +129,12 @@ SHOW WARNINGS;
 USE `smartcapitaldatabase` ;
 
 -- -----------------------------------------------------
--- View `SavingsResult`
+-- View `Savings_Result`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `SavingsResult` ;
+DROP VIEW IF EXISTS `Savings_Result` ;
 SHOW WARNINGS;
 USE `smartcapitaldatabase`;
-CREATE  OR REPLACE VIEW `SavingsResult` AS
+CREATE  OR REPLACE VIEW `Savings_Result` AS
     SELECT 
         p.ProfileID,
         p.ProfileName,
