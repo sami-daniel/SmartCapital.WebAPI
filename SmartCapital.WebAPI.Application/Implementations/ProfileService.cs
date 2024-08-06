@@ -14,29 +14,35 @@ namespace SmartCapital.WebAPI.Application.Implementations
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProfileAsync(Profile profileToAdd)
+        public async Task AddProfileAsync(Profile profileAddRequest)
         {
-            ArgumentNullException.ThrowIfNull(profileToAdd, "O Perfil a ser adicionado não pode ser nulo.");
+            ArgumentNullException.ThrowIfNull(profileAddRequest, "O Perfil a ser adicionado não pode ser nulo.");
 
-            ArgumentException.ThrowIfNullOrEmpty(profileToAdd.ProfileName, "O Nome do Perfil não pode ser vazio ou nulo.");
+            ArgumentException.ThrowIfNullOrEmpty(profileAddRequest.ProfileName, "O Nome do Perfil não pode ser vazio ou nulo.");
 
-            if (profileToAdd.ProfileName.Length > 255)
+            if (profileAddRequest.ProfileName.Length > 255)
                 throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
 
-            if (profileToAdd.ProfileOpeningBalance != null)
+            if (profileAddRequest.ProfileOpeningBalance != null)
             {
-                if (profileToAdd.ProfileOpeningBalance > 999_999_999.99m)
+                if (profileAddRequest.ProfileOpeningBalance > 999_999_999.99m)
                     throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
             }
 
             try
             {
-                await _unitOfWork.ProfileRepository.InsertAsync(profileToAdd);
+                await _unitOfWork.ProfileRepository.InsertAsync(profileAddRequest);
+                await _unitOfWork.CompleteAsync();
             }
             catch (DbUpdateException)
             {
-                throw new ArgumentException($"Um Perfil com o nome {profileToAdd.ProfileName} já existe.");
+                throw new ArgumentException($"Um Perfil com o nome {profileAddRequest.ProfileName} já existe.");
             }
+        }
+
+        public async Task<Profile?> GetProfileByIDAsync(int profileID)
+        {
+            return await _unitOfWork.ProfileRepository.GetByIDAsync(uint.Parse(profileID.ToString()));
         }
 
         public async Task RemoveProfileAsync(Profile profileToRemove)
@@ -44,6 +50,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
             ArgumentNullException.ThrowIfNull(profileToRemove, "O Perfil a Remover não pode ser nulo.");
 
             await _unitOfWork.ProfileRepository.DeleteAsync(profileToRemove);
+            await _unitOfWork.CompleteAsync();
         }
     }
 }
