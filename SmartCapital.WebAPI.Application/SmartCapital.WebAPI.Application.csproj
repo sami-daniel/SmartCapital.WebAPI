@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartCapital.WebAPI.Domain\SmartCapital.WebAPI.Domain.csproj" />
+    <ProjectReference Include="..\SmartCapital.WebAPI.Infrastructure\SmartCapital.WebAPI.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
