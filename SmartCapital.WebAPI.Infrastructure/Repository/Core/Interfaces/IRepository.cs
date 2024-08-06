@@ -13,12 +13,12 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces
 
         public Task InsertRangeAsync(IEnumerable<TEntity> entities);
 
-        public Task UpdateAsync(TEntity entity);
+        public void Update(TEntity entity);
 
-        public Task UpdateRangeAsync(IEnumerable<TEntity> entities);
+        public void UpdateRange(IEnumerable<TEntity> entities);
 
-        public Task DeleteAsync(TEntity entity);
+        public void Delete(TEntity entity);
 
-        public Task DeleteRangeAsync(IEnumerable<TEntity> entities);
+        public void DeleteRange(IEnumerable<TEntity> entities);
     }
 }

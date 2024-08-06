@@ -46,20 +46,14 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
             await _entitySet.AddAsync(entity);
         }
 
-        public virtual async Task UpdateAsync(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
-            await Task.Run(() =>
-            {
-                _entitySet.Update(entity);
-            });
+            _entitySet.Update(entity);
         }
 
-        public virtual async Task DeleteAsync(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
-            await Task.Run(() =>
-            {
-                _entitySet.Remove(entity);
-            });
+            _entitySet.Remove(entity);
         }
 
         public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities)
@@ -67,20 +61,14 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
             await _entitySet.AddRangeAsync(entities);
         }
 
-        public virtual async Task UpdateRangeAsync(IEnumerable<TEntity> entities)
+        public virtual void UpdateRange(IEnumerable<TEntity> entities)
         {
-            await Task.Run(() =>
-            {
-                _entitySet.UpdateRange(entities);
-            });
+            _entitySet.UpdateRange(entities);
         }
 
-        public virtual async Task DeleteRangeAsync(IEnumerable<TEntity> entities)
+        public virtual void DeleteRange(IEnumerable<TEntity> entities)
         {
-            await Task.Run(() =>
-            {
-                _entitySet.RemoveRange(entities);
-            });
+            _entitySet.RemoveRange(entities);
         }
     }
 }
