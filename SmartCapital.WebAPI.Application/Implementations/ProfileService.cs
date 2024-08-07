@@ -40,6 +40,11 @@ namespace SmartCapital.WebAPI.Application.Implementations
             }
         }
 
+        public async Task<IEnumerable<Profile>> GetAllProfilesAsync()
+        {
+            return await _unitOfWork.ProfileRepository.GetAsync();
+        }
+
         public async Task<Profile?> GetProfileByIDAsync(int profileID)
         {
             return await _unitOfWork.ProfileRepository.GetByIDAsync(uint.Parse(profileID.ToString()));
@@ -49,7 +54,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
         {
             ArgumentNullException.ThrowIfNull(profileToRemove, "O Perfil a Remover não pode ser nulo.");
 
-            await _unitOfWork.ProfileRepository.DeleteAsync(profileToRemove);
+            _unitOfWork.ProfileRepository.Delete(profileToRemove);
             await _unitOfWork.CompleteAsync();
         }
     }

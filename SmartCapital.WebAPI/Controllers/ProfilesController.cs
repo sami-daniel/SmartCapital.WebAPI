@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmartCapital.WebAPI.Application.DTO.AddRequests;
 using SmartCapital.WebAPI.Application.Interfaces;
-using SmartCapital.WebAPI.Domain.Domain;
+using SmartCapital.WebAPI.DTO.Responses;
+using SmartCapital.WebAPI.Filters;
 
 namespace SmartCapital.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EntityFrameworkCoreTransactionControllerFilter()]
     public class ProfilesController : ControllerBase
     {
         private readonly IProfileService _profileService;
@@ -17,20 +18,23 @@ namespace SmartCapital.WebAPI.Controllers
             _profileService = profileService;
         }
 
-        [HttpGet("{ID:int}")]
-        public async Task<IActionResult> GetProfileByID([FromRoute] int ID)
+        [HttpGet]
+        public async Task<IActionResult> GetProfiles()
         {
-            var profile = await _profileService.GetProfileByIDAsync(ID);
+            var profiles = await _profileService.GetAllProfilesAsync();
 
-            if (profile == null)
-                return NotFound();
-
-            return Ok(profile);
+            return Ok(profiles.Select(p => p.ToProfileResponse()));
         }
+
 
         [HttpPost]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profile)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = string.Join('\n', ModelState.Values.SelectMany(e => e.Errors));
+                return BadRequest(errors);
+            }
             await _profileService.AddProfileAsync(profile.ToProfile());
 
             return Created();

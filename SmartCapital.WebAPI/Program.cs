@@ -19,7 +19,7 @@ namespace SmartCapital.WebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"], new MySqlServerVersion(new Version(8, 4, 0))));
+            builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"], new MySqlServerVersion(new Version(8, 4, 0))));    
 
             builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

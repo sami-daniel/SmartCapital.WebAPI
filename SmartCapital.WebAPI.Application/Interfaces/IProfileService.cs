@@ -7,5 +7,6 @@ namespace SmartCapital.WebAPI.Application.Interfaces
         public Task AddProfileAsync(Profile profileAddRequest);
         public Task RemoveProfileAsync(Profile profileToRemove);
         public Task<Profile?> GetProfileByIDAsync(int profileID);
+        public Task<IEnumerable<Profile>> GetAllProfilesAsync();
     }
 }
