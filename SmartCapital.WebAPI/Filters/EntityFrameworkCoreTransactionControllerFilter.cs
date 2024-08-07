@@ -5,6 +5,7 @@ using SmartCapital.WebAPI.Infrastructure.Data.Contexts;
 
 namespace SmartCapital.WebAPI.Filters
 {
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class EntityFrameworkCoreTransactionControllerFilter : ActionFilterAttribute
     {
         private IDbContextTransaction _transaction = null!;

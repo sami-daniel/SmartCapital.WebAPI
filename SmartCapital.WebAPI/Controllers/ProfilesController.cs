@@ -8,7 +8,7 @@ namespace SmartCapital.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EntityFrameworkCoreTransactionControllerFilter()]
+    [EntityFrameworkCoreTransactionControllerFilter]
     public class ProfilesController : ControllerBase
     {
         private readonly IProfileService _profileService;
