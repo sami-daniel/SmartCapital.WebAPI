@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using SmartCapital.WebAPI.Application.Implementations;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.Infrastructure.Data.Contexts;
@@ -17,7 +18,15 @@ namespace SmartCapital.WebAPI
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(opt =>
+            {
+                opt.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "SmartCapital Web API",
+                    Description = "Uma Web API ASP.NET Core para controle financeiro, totalmente personalizavel"
+                });
+            });
 
             builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"], new MySqlServerVersion(new Version(8, 4, 0))));    
 
