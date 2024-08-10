@@ -38,7 +38,7 @@ namespace SmartCapital.WebAPI.Controllers
 
             if (profiles.Any())
             {
-                return Ok(profiles.First());
+                return Ok(profiles.First().ToProfileResponse());
             }
 
             return NotFound();
