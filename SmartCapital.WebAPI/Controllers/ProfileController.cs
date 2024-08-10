@@ -9,11 +9,11 @@ namespace SmartCapital.WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EntityFrameworkCoreTransactionControllerFilter]
-    public class ProfilesController : ControllerBase
+    public class ProfileController : ControllerBase
     {
         private readonly IProfileService _profileService;
 
-        public ProfilesController(IProfileService profileService)
+        public ProfileController(IProfileService profileService)
         {
             _profileService = profileService;
         }
