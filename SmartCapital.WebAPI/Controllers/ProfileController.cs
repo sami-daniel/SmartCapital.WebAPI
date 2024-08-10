@@ -47,14 +47,21 @@ namespace SmartCapital.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profile)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                var errors = string.Join('\n', ModelState.Values.SelectMany(e => e.Errors));
-                return BadRequest(errors);
+                await _profileService.AddProfileAsync(profile.ToProfile());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de validação de dados: {ex.Message}");
+            }
+            catch (ExistingProfileException ex)
+            {
+                return BadRequest(ex.Message);
             }
             await _profileService.AddProfileAsync(profile.ToProfile());
 
-            return Created();
+            return CreatedAtRoute("", new { profile.ProfileName });
         }
 
         [HttpDelete("{ID:int}")]
