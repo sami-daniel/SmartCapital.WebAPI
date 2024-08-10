@@ -60,6 +60,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="201">O Perfil foi criado</response>
         /// <response code="400">Houve algum erro de validação no Perfil</response>
         [HttpPost]
+        [ProducesResponseType(201)]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profile)
         {
             try
@@ -86,6 +87,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="204">O Perfil foi deletado corretamente</response>
         /// <response code="404">Não foi possivel encontrar um Perfil com o ID especificado</response>
         [HttpDelete("{ID:int}")]
+        [ProducesResponseType(204)]
         public async Task<IActionResult> DeleteProfile([FromRoute] int ID)
         {
             var profileToRemove = await _profileService.GetProfileByIDAsync(ID);
