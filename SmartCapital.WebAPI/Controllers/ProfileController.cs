@@ -31,6 +31,18 @@ namespace SmartCapital.WebAPI.Controllers
             return Ok(profiles.Select(p => p.ToProfileResponse()));
         }
 
+        [HttpGet("{profileName}")]
+        public async Task<IActionResult> GetProfileByName([FromRoute] string profileName)
+        {
+            var profiles = await _profileService.GetFilteredProfilesAsync(p => p.ProfileName == profileName);
+
+            if (profiles.Any())
+            {
+                return Ok(profiles.First());
+            }
+
+            return NotFound();
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profile)
