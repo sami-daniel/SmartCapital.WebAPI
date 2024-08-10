@@ -18,6 +18,11 @@ namespace SmartCapital.WebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+            builder.Services.AddRouting(opt =>
+            {
+                opt.LowercaseQueryStrings = true;
+                opt.LowercaseUrls = true;
+            });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(opt =>
             {
