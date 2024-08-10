@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.Domain.Domain;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
@@ -36,7 +37,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
             }
             catch (DbUpdateException)
             {
-                throw new ArgumentException($"Um Perfil com o nome {profileAddRequest.ProfileName} já existe.");
+                throw new ExistingProfileException($"Um Perfil com o nome {profileAddRequest.ProfileName} já existe.");
             }
         }
 
