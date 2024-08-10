@@ -3,6 +3,7 @@ using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.Domain.Domain;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartCapital.WebAPI.Application.Implementations
 {
@@ -44,6 +45,11 @@ namespace SmartCapital.WebAPI.Application.Implementations
         public async Task<IEnumerable<Profile>> GetAllProfilesAsync()
         {
             return await _unitOfWork.ProfileRepository.GetAsync();
+        }
+
+        public Task<IEnumerable<Profile>> GetFilteredProfilesAsync(Expression<Func<Profile, bool>> filter)
+        {
+            return _unitOfWork.ProfileRepository.GetAsync(filter: filter);
         }
 
         public async Task<Profile?> GetProfileByIDAsync(int profileID)
