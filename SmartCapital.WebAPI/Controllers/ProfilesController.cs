@@ -18,6 +18,11 @@ namespace SmartCapital.WebAPI.Controllers
             _profileService = profileService;
         }
 
+        /// <summary>
+        /// Retorna todos os perfis existentes.
+        /// </summary>
+        /// <returns>Todos os perfis exitentes.</returns>
+        /// <response code="200">Retorna todos os perfis existentes.</response>
         [HttpGet]
         public async Task<IActionResult> GetProfiles()
         {

@@ -7,6 +7,7 @@ using SmartCapital.WebAPI.Infrastructure.Repository.Implementations;
 using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Implementations;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
+using System.Reflection;
 
 namespace SmartCapital.WebAPI
 {
@@ -26,6 +27,9 @@ namespace SmartCapital.WebAPI
                     Title = "SmartCapital Web API",
                     Description = "Uma Web API ASP.NET Core para controle financeiro, totalmente personalizavel"
                 });
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                opt.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
             builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"], new MySqlServerVersion(new Version(8, 4, 0))));    
