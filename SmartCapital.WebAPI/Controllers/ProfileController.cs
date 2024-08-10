@@ -3,27 +3,32 @@ using SmartCapital.WebAPI.Application.DTO.AddRequests;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.DTO.Responses;
-using SmartCapital.WebAPI.Filters;
 
 namespace SmartCapital.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controlador para gerenciar operações relacionadas a perfis.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [EntityFrameworkCoreTransactionControllerFilter]
     public class ProfileController : ControllerBase
     {
         private readonly IProfileService _profileService;
 
+        /// <summary>
+        /// Inicializa uma nova instância da classe <see cref="ProfileController"/> com o serviço de perfis fornecido.
+        /// </summary>
+        /// <param name="profileService">O serviço para gerenciar operações de perfil.</param>
         public ProfileController(IProfileService profileService)
         {
             _profileService = profileService;
         }
 
         /// <summary>
-        /// Retorna todos os Perfis existentes
+        /// Retorna todos os perfis existentes.
         /// </summary>
-        /// <returns>Todos os Perfis exitentes</returns>
-        /// <response code="200">Retorna todos os Perfis existentes</response>
+        /// <returns>Todos os perfis existentes no sistema.</returns>
+        /// <response code="200">Retorna uma lista de todos os perfis existentes.</response>
         [HttpGet]
         public async Task<IActionResult> GetProfiles()
         {
@@ -33,12 +38,12 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Retorna o Perfil de acordo com o nome
+        /// Retorna o perfil de acordo com o nome fornecido.
         /// </summary>
-        /// <param name="profileName">O nome do Perfil</param>
-        /// <returns>O Perfil que é identificado por aquele nome</returns>
-        /// <response code="200">Retorna o Perfil de acordo com o nome especificado</response>
-        /// <response code="404">Não foi possivel encontrar um Perfil com o nome especificado</response>
+        /// <param name="profileName">O nome do perfil a ser retornado.</param>
+        /// <returns>O perfil que corresponde ao nome especificado.</returns>
+        /// <response code="200">Retorna o perfil com o nome especificado.</response>
+        /// <response code="404">Não foi possível encontrar um perfil com o nome especificado.</response>
         [HttpGet("{profileName}")]
         public async Task<IActionResult> GetProfileByName([FromRoute] string profileName)
         {
@@ -53,12 +58,12 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Cria um novo perfil
+        /// Cria um novo perfil.
         /// </summary>
-        /// <param name="profile">O Perfil a ser criado</param>
-        /// <returns>O Perfil recentemente criado</returns>
-        /// <response code="201">O Perfil foi criado</response>
-        /// <response code="400">Houve algum erro de validação no Perfil</response>
+        /// <param name="profile">Os dados do perfil a ser criado.</param>
+        /// <returns>O perfil recentemente criado.</returns>
+        /// <response code="201">O perfil foi criado com sucesso.</response>
+        /// <response code="400">Houve um erro de validação nos dados do perfil.</response>
         [HttpPost]
         [ProducesResponseType(201)]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profile)
@@ -80,15 +85,15 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Deleta o Perfil de acordo com ID
+        /// Deleta um perfil com o ID especificado.
         /// </summary>
-        /// <param name="ID">O ID do perfil a ser deletado</param>
-        /// <returns></returns>
-        /// <response code="204">O Perfil foi deletado corretamente</response>
-        /// <response code="404">Não foi possivel encontrar um Perfil com o ID especificado</response>
+        /// <param name="ID">O ID do perfil a ser deletado.</param>
+        /// <returns>Um status de resposta indicando o resultado da operação.</returns>
+        /// <response code="204">O perfil foi deletado com sucesso.</response>
+        /// <response code="404">Não foi possível encontrar um perfil com o ID especificado.</response>
         [HttpDelete("{ID:int}")]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> DeleteProfile([FromRoute] int ID)
+        public async Task<IActionResult> DeleteProfile([FromRoute] uint ID)
         {
             var profileToRemove = await _profileService.GetProfileByIDAsync(ID);
 

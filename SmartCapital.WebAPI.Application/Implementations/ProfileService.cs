@@ -64,9 +64,9 @@ namespace SmartCapital.WebAPI.Application.Implementations
             return _unitOfWork.ProfileRepository.GetAsync(filter: filter);
         }
 
-        public async Task<Profile?> GetProfileByIDAsync(int profileID)
+        public async Task<Profile?> GetProfileByIDAsync(uint profileID)
         {
-            return await _unitOfWork.ProfileRepository.GetByIDAsync(uint.Parse(profileID.ToString()));
+            return await _unitOfWork.ProfileRepository.GetByIDAsync(profileID);
         }
 
         public async Task RemoveProfileAsync(Profile profileToRemove)

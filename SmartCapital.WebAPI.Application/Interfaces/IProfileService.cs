@@ -27,7 +27,7 @@ namespace SmartCapital.WebAPI.Application.Interfaces
         /// </summary>
         /// <param name="profileID">O identificador do perfil a ser recuperado.</param>
         /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o perfil com o identificador especificado ou <c>null</c> se não encontrado.</returns>
-        public Task<Profile?> GetProfileByIDAsync(int profileID);
+        public Task<Profile?> GetProfileByIDAsync(uint profileID);
 
         /// <summary>
         /// Obtém todos os perfis do sistema.
