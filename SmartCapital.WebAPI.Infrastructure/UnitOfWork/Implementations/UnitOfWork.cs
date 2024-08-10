@@ -1,4 +1,5 @@
-﻿using SmartCapital.WebAPI.Infrastructure.Data.Contexts;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using SmartCapital.WebAPI.Infrastructure.Data.Contexts;
 using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
 
@@ -19,8 +20,6 @@ namespace SmartCapital.WebAPI.Infrastructure.UnitOfWork.Implementations
 
         public async Task<int> CompleteAsync()
         {
-            if (_context.Database.CurrentTransaction != null)
-               await  _context.Database.CurrentTransaction.CommitAsync();
             return await _context.SaveChangesAsync();
         }
 
@@ -41,6 +40,11 @@ namespace SmartCapital.WebAPI.Infrastructure.UnitOfWork.Implementations
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public async Task<IDbContextTransaction> StartTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
     }
 }

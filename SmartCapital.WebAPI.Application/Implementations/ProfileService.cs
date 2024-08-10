@@ -7,10 +7,17 @@ using System.Linq.Expressions;
 
 namespace SmartCapital.WebAPI.Application.Implementations
 {
+    /// <summary>
+    /// Fornece a implementação dos serviços relacionados a perfis, incluindo operações CRUD e filtragem.
+    /// </summary>
     public class ProfileService : IProfileService
     {
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Inicializa uma nova instância da classe <see cref="ProfileService"/> com a unidade de trabalho fornecida.
+        /// </summary>
+        /// <param name="unitOfWork">A unidade de trabalho usada para gerenciar operações de repositório e transações.</param>
         public ProfileService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -31,14 +38,19 @@ namespace SmartCapital.WebAPI.Application.Implementations
                     throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
             }
 
-            try
+            using (var transaction = await _unitOfWork.StartTransactionAsync()) 
             {
-                await _unitOfWork.ProfileRepository.InsertAsync(profileAddRequest);
-                await _unitOfWork.CompleteAsync();
-            }
-            catch (DbUpdateException)
-            {
-                throw new ExistingProfileException($"Um Perfil com o nome {profileAddRequest.ProfileName} já existe.");
+                try
+                {
+                    await _unitOfWork.ProfileRepository.InsertAsync(profileAddRequest);
+                    await transaction.CommitAsync();
+                    await _unitOfWork.CompleteAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    await transaction.RollbackAsync();
+                    throw new ExistingProfileException($"Um Perfil com o nome {profileAddRequest.ProfileName} já existe.");
+                }
             }
         }
 
