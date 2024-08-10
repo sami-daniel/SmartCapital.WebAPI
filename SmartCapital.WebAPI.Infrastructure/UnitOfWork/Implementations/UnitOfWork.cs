@@ -19,6 +19,8 @@ namespace SmartCapital.WebAPI.Infrastructure.UnitOfWork.Implementations
 
         public async Task<int> CompleteAsync()
         {
+            if (_context.Database.CurrentTransaction != null)
+               await  _context.Database.CurrentTransaction.CommitAsync();
             return await _context.SaveChangesAsync();
         }
 
