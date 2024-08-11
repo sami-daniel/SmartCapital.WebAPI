@@ -11,15 +11,15 @@ namespace SmartCapital.WebAPI.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class ProfileController : ControllerBase
+    public class ProfilesController : ControllerBase
     {
         private readonly IProfileService _profileService;
 
         /// <summary>
-        /// Inicializa uma nova instância da classe <see cref="ProfileController"/> com o serviço de perfis fornecido.
+        /// Inicializa uma nova instância da classe <see cref="ProfilesController"/> com o serviço de perfis fornecido.
         /// </summary>
         /// <param name="profileService">O serviço para gerenciar operações de perfil.</param>
-        public ProfileController(IProfileService profileService)
+        public ProfilesController(IProfileService profileService)
         {
             _profileService = profileService;
         }
