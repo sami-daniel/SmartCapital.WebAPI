@@ -23,13 +23,6 @@ namespace SmartCapital.WebAPI.Application.Interfaces
         public Task RemoveProfileAsync(Profile profileToRemove);
 
         /// <summary>
-        /// Obtém um perfil específico pelo seu identificador.
-        /// </summary>
-        /// <param name="profileID">O identificador do perfil a ser recuperado.</param>
-        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o perfil com o identificador especificado ou <c>null</c> se não encontrado.</returns>
-        public Task<Profile?> GetProfileByIDAsync(uint profileID);
-
-        /// <summary>
         /// Obtém todos os perfis do sistema.
         /// </summary>
         /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os perfis.</returns>
