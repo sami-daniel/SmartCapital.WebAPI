@@ -8,11 +8,6 @@ namespace SmartCapital.WebAPI.DTO.Responses
     public class ProfileResponse
     {
         /// <summary>
-        /// Identificador único do perfil.
-        /// </summary>
-        public uint ProfileId { get; set; }
-
-        /// <summary>
         /// Data de criação do perfil.
         /// </summary>
         public DateTime ProfileCreationDate { get; set; }
@@ -48,7 +43,6 @@ namespace SmartCapital.WebAPI.DTO.Responses
         {
             return new ProfileResponse
             {
-                ProfileId = profile.ProfileId,
                 ProfileCreationDate = profile.ProfileCreationDate,
                 ProfileOpeningBalance = profile.ProfileOpeningBalance,
                 ProfileName = profile.ProfileName
