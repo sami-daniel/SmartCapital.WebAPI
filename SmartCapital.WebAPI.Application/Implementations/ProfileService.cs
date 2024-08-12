@@ -44,6 +44,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
                     throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
             }
 
+            profileAddRequest.ProfileName = profileAddRequest.ProfileName.Trim();
+
             using (var transaction = await _unitOfWork.StartTransactionAsync()) 
             {
                 try
