@@ -4,6 +4,7 @@ using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.Domain.Domain;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace SmartCapital.WebAPI.Application.Implementations
 {
@@ -31,6 +32,11 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             if (profileAddRequest.ProfileName.Length > 255)
                 throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
+
+            if (!Regex.Match(profileAddRequest.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
+            {
+                throw new ArgumentException("O Nome do Perfil pode conter somente letras, números e espaços.");
+            }
 
             if (profileAddRequest.ProfileOpeningBalance != null)
             {
