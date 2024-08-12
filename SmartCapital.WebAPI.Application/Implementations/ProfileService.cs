@@ -72,6 +72,18 @@ namespace SmartCapital.WebAPI.Application.Implementations
             return _unitOfWork.ProfileRepository.GetAsync(filter: filter);
         }
 
+        public async Task<Profile?> GetProfileByNameAsync(string profileName)
+        {
+            var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName == profileName);
+
+            if (!profiles.Any())
+            {
+                return null;
+            }
+
+            return profiles.First();
+        }
+
         public async Task RemoveProfileAsync(Profile profileToRemove)
         {
             ArgumentNullException.ThrowIfNull(profileToRemove, "O Perfil a Remover não pode ser nulo.");
