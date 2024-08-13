@@ -51,8 +51,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
                 try
                 {
                     await _unitOfWork.ProfileRepository.InsertAsync(profileAddRequest);
-                    await transaction.CommitAsync();
                     await _unitOfWork.CompleteAsync();
+                    await transaction.CommitAsync();
                 }
                 catch (DbUpdateException)
                 {
