@@ -31,6 +31,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <returns>Todos os perfis existentes no sistema.</returns>
         /// <response code="200">Retorna uma lista de todos os perfis existentes.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(ProfileResponse), 200)]
         public async Task<IActionResult> GetProfiles()
         {
             var profiles = await _profileService.GetAllProfilesAsync();
@@ -46,6 +47,8 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="200">Retorna o perfil com o nome especificado.</response>
         /// <response code="404">Não foi possível encontrar um perfil com o nome especificado.</response>
         [HttpGet("{profileName}")]
+        [ProducesResponseType(typeof(ProfileResponse), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> GetProfileByName([FromRoute] string profileName)
         {
             var profiles = await _profileService.GetFilteredProfilesAsync(p => p.ProfileName == profileName);
@@ -70,10 +73,12 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="201">O perfil foi criado com sucesso.</response>
         /// <response code="400">
         /// Houve um erro na criação do perfil:
-        /// - Se o erro for de validação de dados, o campos fornecidos no esquema são invalidos. Confira https://localhost:7063/swagger/v1/swagger.json > components > ProfileAddRequest para verificar o formato dos campos.
+        /// - Se o erro for de validação de dados, os campos fornecidos no esquema são inválidos. Confira https://localhost:7063/swagger/v1/swagger.json > components > ProfileAddRequest para verificar o formato dos campos.
+        /// - Se o erro for devido à criação de um perfil já existente, o campo 'ErrorType' na resposta será 'ProfileCreationError'.
         /// </response>
         [HttpPost]
         [ProducesResponseType(201)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profile)
         {
             try
@@ -101,14 +106,15 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Deleta um perfil com o ID especificado.
+        /// Deleta um perfil com o nome especificado.
         /// </summary>
         /// <param name="profileName">O nome do perfil a ser deletado.</param>
         /// <returns>Um status de resposta indicando o resultado da operação.</returns>
         /// <response code="204">O perfil foi deletado com sucesso.</response>
-        /// <response code="404">Não foi possível encontrar um perfil com o ID especificado.</response>
-        [HttpDelete("{ID:int}")]
+        /// <response code="404">Não foi possível encontrar um perfil com o nome especificado.</response>
+        [HttpDelete("{profileName}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ErrorResponse) ,404)]
         public async Task<IActionResult> DeleteProfile([FromRoute] string profileName)
         {
             var profileToRemove = await _profileService.GetProfileByNameAsync(profileName);
