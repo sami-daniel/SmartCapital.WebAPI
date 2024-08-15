@@ -16,6 +16,7 @@ namespace SmartCapital.WebAPI.Application.DTO.AddRequests
         /// </remarks>
         [Required]
         [StringLength(255, ErrorMessage = "O tamanho do Nome do Perfil não pode exceder {0} caracteres")]
+        [RegularExpression("^[a-zA-Z0-9 ]*$", ErrorMessage = "O Nome do Perfil pode conter somente letras e números.")]
         public string ProfileName { get; set; } = null!;
 
         /// <summary>
