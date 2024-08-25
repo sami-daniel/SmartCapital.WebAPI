@@ -16,6 +16,17 @@ namespace SmartCapital.WebAPI.Application.Interfaces
         public Task AddProfileAsync(Profile profileToAdd);
 
         /// <summary>
+        /// Atualiza um perfil existente no sistema.
+        /// </summary>
+        /// <param name="profileName">O nome do perfil a ser modificado.</param>
+        /// <param name="profile">O objeto <see cref="Profile"/> contendo as informações atualizadas do perfil.</param>
+        /// <returns>
+        /// Uma tarefa que representa a operação assíncrona. O resultado da tarefa contém o objeto <see cref="Profile"/> atualizado se a atualização for bem-sucedida;
+        /// caso contrário, retorna <c>null</c> se o perfil não for encontrado ou se a atualização falhar.
+        /// </returns>
+        public Task<Profile?> UpdateProfileAsync(string profileName, Profile updatedProfile);
+
+        /// <summary>
         /// Remove um perfil existente do sistema.
         /// </summary>
         /// <param name="profileToRemove">O perfil a ser removido.</param>
