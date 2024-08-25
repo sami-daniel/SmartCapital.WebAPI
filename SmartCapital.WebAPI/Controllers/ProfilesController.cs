@@ -2,13 +2,15 @@
 using SmartCapital.WebAPI.Application.DTO.AddRequests;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
+using SmartCapital.WebAPI.Domain.Domain;
 using SmartCapital.WebAPI.DTO.Responses;
+using SmartCapital.WebAPI.DTO.UpdateRequests;
 using SmartCapital.WebAPI.Models;
 
 namespace SmartCapital.WebAPI.Controllers
 {
     /// <summary>
-    /// Controlador para gerenciar operações relacionadas a perfis.
+    /// Controlador responsável por gerenciar operações relacionadas a perfis.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -17,21 +19,21 @@ namespace SmartCapital.WebAPI.Controllers
         private readonly IProfileService _profileService;
 
         /// <summary>
-        /// Inicializa uma nova instância da classe <see cref="ProfilesController"/> com o serviço de perfis fornecido.
+        /// Inicializa uma nova instância de <see cref="ProfilesController"/> com o serviço de perfis fornecido.
         /// </summary>
-        /// <param name="profileService">O serviço para gerenciar operações de perfil.</param>
+        /// <param name="profileService">Serviço para gerenciar operações de perfil.</param>
         public ProfilesController(IProfileService profileService)
         {
             _profileService = profileService;
         }
 
         /// <summary>
-        /// Retorna todos os perfis existentes.
+        /// Obtém uma lista de todos os perfis existentes.
         /// </summary>
-        /// <returns>Todos os perfis existentes no sistema.</returns>
-        /// <response code="200">Retorna uma lista de todos os perfis existentes.</response>
+        /// <returns>Uma lista de objetos <see cref="ProfileResponse"/> representando todos os perfis existentes no sistema.</returns>
+        /// <response code="200">Perfis encontrados com sucesso.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(ProfileResponse), 200)]
+        [ProducesResponseType(typeof(IEnumerable<ProfileResponse>), 200)]
         public async Task<IActionResult> GetProfiles()
         {
             var profiles = await _profileService.GetAllProfilesAsync();
@@ -40,12 +42,12 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Retorna o perfil de acordo com o nome fornecido.
+        /// Obtém o perfil correspondente ao nome fornecido.
         /// </summary>
-        /// <param name="profileName">O nome do perfil a ser retornado.</param>
-        /// <returns>O perfil que corresponde ao nome especificado.</returns>
-        /// <response code="200">Retorna o perfil com o nome especificado.</response>
-        /// <response code="404">Não foi possível encontrar um perfil com o nome especificado.</response>
+        /// <param name="profileName">Nome do perfil a ser recuperado.</param>
+        /// <returns>Um objeto <see cref="ProfileResponse"/> representando o perfil encontrado.</returns>
+        /// <response code="200">Perfil encontrado com sucesso.</response>
+        /// <response code="404">Perfil com o nome fornecido não encontrado.</response>
         [HttpGet("{profileName}")]
         [ProducesResponseType(typeof(ProfileResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
@@ -61,21 +63,17 @@ namespace SmartCapital.WebAPI.Controllers
             return NotFound(new ErrorResponse
             {
                 ErrorType = "ProfileNotFound",
-                Message = "O perfil com o nome fornecido não pode ser encontrado."
+                Message = "O perfil com o nome fornecido não foi encontrado."
             });
         }
 
         /// <summary>
-        /// Cria um novo perfil.
+        /// Cria um novo perfil no sistema.
         /// </summary>
-        /// <param name="profile">Os dados do perfil a ser criado.</param>
-        /// <returns>O perfil recentemente criado.</returns>
-        /// <response code="201">O perfil foi criado com sucesso.</response>
-        /// <response code="400">
-        /// Houve um erro na criação do perfil:
-        /// - Se o erro for de validação de dados, os campos fornecidos no esquema são inválidos. Confira https://localhost:7063/swagger/v1/swagger.json > components > ProfileAddRequest para verificar o formato dos campos.
-        /// - Se o erro for devido à criação de um perfil já existente, o campo 'ErrorType' na resposta será 'ProfileCreationError'.
-        /// </response>
+        /// <param name="profile">Dados do perfil a ser criado.</param>
+        /// <returns>O perfil recém-criado.</returns>
+        /// <response code="201">Perfil criado com sucesso.</response>
+        /// <response code="400">Erro ao criar o perfil, devido a problemas de validação ou duplicidade.</response>
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
@@ -90,7 +88,7 @@ namespace SmartCapital.WebAPI.Controllers
                 return BadRequest(new ErrorResponse
                 {
                     ErrorType = "ValidationError",
-                    Message = $"Erro de validação de dados: {ex.Message}"
+                    Message = $"Erro de validação: {ex.Message}"
                 });
             }
             catch (ExistingProfileException ex)
@@ -98,7 +96,7 @@ namespace SmartCapital.WebAPI.Controllers
                 return BadRequest(new ErrorResponse
                 {
                     ErrorType = "ProfileCreationError",
-                    Message = $"Erro na criação do Perfil: {ex.Message}"
+                    Message = $"Erro ao criar o perfil: {ex.Message}"
                 });
             }
 
@@ -106,15 +104,15 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Deleta um perfil com o nome especificado.
+        /// Exclui o perfil correspondente ao nome fornecido.
         /// </summary>
-        /// <param name="profileName">O nome do perfil a ser deletado.</param>
-        /// <returns>Um status de resposta indicando o resultado da operação.</returns>
-        /// <response code="204">O perfil foi deletado com sucesso.</response>
-        /// <response code="404">Não foi possível encontrar um perfil com o nome especificado.</response>
+        /// <param name="profileName">Nome do perfil a ser excluído.</param>
+        /// <returns>Status indicando o resultado da operação.</returns>
+        /// <response code="204">Perfil excluído com sucesso.</response>
+        /// <response code="404">Perfil com o nome fornecido não encontrado.</response>
         [HttpDelete("{profileName}")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(typeof(ErrorResponse) ,404)]
+        [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> DeleteProfile([FromRoute] string profileName)
         {
             var profileToRemove = await _profileService.GetProfileByNameAsync(profileName);
@@ -123,10 +121,58 @@ namespace SmartCapital.WebAPI.Controllers
                 return NotFound(new ErrorResponse
                 {
                     ErrorType = "ProfileNotFound",
-                    Message = "O perfil com o nome fornecido não pode ser encontrado."
+                    Message = "O perfil com o nome fornecido não foi encontrado."
                 });
 
             await _profileService.RemoveProfileAsync(profileToRemove);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Atualiza um perfil existente com base no nome fornecido.
+        /// </summary>
+        /// <param name="profileName">Nome do perfil a ser atualizado.</param>
+        /// <param name="profile">Dados atualizados do perfil.</param>
+        /// <returns>Status indicando o resultado da operação.</returns>
+        /// <response code="204">Perfil atualizado com sucesso.</response>
+        /// <response code="400">Erro na atualização do perfil, devido a problemas de validação ou duplicidade.</response>
+        /// <response code="404">Perfil com o nome fornecido não encontrado.</response>
+        [HttpPut("{profileName}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
+        [ProducesResponseType(typeof(ErrorResponse), 404)]
+        public async Task<IActionResult> UpdateProfile([FromRoute] string profileName, [FromBody] ProfileUpdateRequest profile)
+        {
+            Profile? updatedProfile;
+
+            try
+            {
+                updatedProfile = await _profileService.UpdateProfileAsync(profileName, profile.ToProfile());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    ErrorType = "ValidationError",
+                    Message = $"Erro de validação: {ex.Message}"
+                });
+            }
+            catch (ExistingProfileException ex)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    ErrorType = "ProfileUpdateError",
+                    Message = $"Erro ao atualizar o perfil: {ex.Message}"
+                });
+            }
+
+            if (updatedProfile == null)
+                return NotFound(new ErrorResponse
+                {
+                    ErrorType = "ProfileNotFound",
+                    Message = "O perfil com o nome fornecido não foi encontrado."
+                });
 
             return NoContent();
         }
