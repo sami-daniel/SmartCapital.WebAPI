@@ -26,9 +26,9 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
         public async Task AddProfileAsync(Profile profileToAdd)
         {
-            ArgumentNullException.ThrowIfNull(profileToAdd, "O Perfil a ser adicionado não pode ser nulo.");
+            ArgumentNullException.ThrowIfNull(profileToAdd, nameof(profileToAdd));
 
-            ArgumentException.ThrowIfNullOrEmpty(profileToAdd.ProfileName, "O Nome do Perfil não pode ser vazio ou nulo.");
+            ArgumentException.ThrowIfNullOrEmpty(profileToAdd.ProfileName, nameof(profileToAdd.ProfileName));
 
             if (profileToAdd.ProfileName.Length > 255)
                 throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
