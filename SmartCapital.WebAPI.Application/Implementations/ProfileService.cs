@@ -91,5 +91,56 @@ namespace SmartCapital.WebAPI.Application.Implementations
             _unitOfWork.ProfileRepository.Delete(profileToRemove);
             await _unitOfWork.CompleteAsync();
         }
+
+        public async Task<Profile?> UpdateProfileAsync(string profileName, Profile updatedProfile)
+        {
+            ArgumentNullException.ThrowIfNullOrEmpty(profileName, nameof(profileName));
+
+            ArgumentNullException.ThrowIfNull(updatedProfile, nameof(updatedProfile));
+
+            var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName ==  profileName);
+
+            if (!profiles.Any())
+            {
+                return null;
+            }
+
+            var profile = profiles.First();
+
+            if (profile.ProfileName.Length > 255)
+                throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
+
+            if (!Regex.Match(profile.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
+            {
+                throw new ArgumentException("O Nome do Perfil pode conter somente letras, números e espaços.");
+            }
+
+            if (profile.ProfileOpeningBalance != null)
+            {
+                if (profile.ProfileOpeningBalance > 999_999_999.99m)
+                    throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
+            }
+
+            profile.ProfileName = profile.ProfileName.Trim();
+
+            profile.ProfileName = profileName;
+            profile.ProfileOpeningBalance = updatedProfile.ProfileOpeningBalance;
+
+            using (var transaction = await _unitOfWork.StartTransactionAsync())
+            {
+                try
+                {
+                    await _unitOfWork.CompleteAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    await transaction.RollbackAsync(); 
+                    throw new ExistingProfileException($"Um Perfil com o nome {profile.ProfileName} já existe.");
+                }
+            }
+
+            return profile;
+        }
     }
 }
