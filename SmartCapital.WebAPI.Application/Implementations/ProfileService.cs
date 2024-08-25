@@ -24,40 +24,40 @@ namespace SmartCapital.WebAPI.Application.Implementations
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProfileAsync(Profile profileAddRequest)
+        public async Task AddProfileAsync(Profile profileToAdd)
         {
-            ArgumentNullException.ThrowIfNull(profileAddRequest, "O Perfil a ser adicionado não pode ser nulo.");
+            ArgumentNullException.ThrowIfNull(profileToAdd, "O Perfil a ser adicionado não pode ser nulo.");
 
-            ArgumentException.ThrowIfNullOrEmpty(profileAddRequest.ProfileName, "O Nome do Perfil não pode ser vazio ou nulo.");
+            ArgumentException.ThrowIfNullOrEmpty(profileToAdd.ProfileName, "O Nome do Perfil não pode ser vazio ou nulo.");
 
-            if (profileAddRequest.ProfileName.Length > 255)
+            if (profileToAdd.ProfileName.Length > 255)
                 throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
 
-            if (!Regex.Match(profileAddRequest.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
+            if (!Regex.Match(profileToAdd.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
             {
                 throw new ArgumentException("O Nome do Perfil pode conter somente letras, números e espaços.");
             }
 
-            if (profileAddRequest.ProfileOpeningBalance != null)
+            if (profileToAdd.ProfileOpeningBalance != null)
             {
-                if (profileAddRequest.ProfileOpeningBalance > 999_999_999.99m)
+                if (profileToAdd.ProfileOpeningBalance > 999_999_999.99m)
                     throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
             }
 
-            profileAddRequest.ProfileName = profileAddRequest.ProfileName.Trim();
+            profileToAdd.ProfileName = profileToAdd.ProfileName.Trim();
 
             using (var transaction = await _unitOfWork.StartTransactionAsync()) 
             {
                 try
                 {
-                    await _unitOfWork.ProfileRepository.InsertAsync(profileAddRequest);
+                    await _unitOfWork.ProfileRepository.InsertAsync(profileToAdd);
                     await _unitOfWork.CompleteAsync();
                     await transaction.CommitAsync();
                 }
                 catch (DbUpdateException)
                 {
                     await transaction.RollbackAsync();
-                    throw new ExistingProfileException($"Um Perfil com o nome {profileAddRequest.ProfileName} já existe.");
+                    throw new ExistingProfileException($"Um Perfil com o nome {profileToAdd.ProfileName} já existe.");
                 }
             }
         }
