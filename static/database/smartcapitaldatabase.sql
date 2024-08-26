@@ -17,6 +17,25 @@ SHOW WARNINGS;
 USE `smartcapitaldatabase` ;
 
 -- -----------------------------------------------------
+-- Table `Users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Users` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `Users` (
+  `UserID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserName` VARCHAR(255) NOT NULL,
+  `UserPassword` VARCHAR(255) NOT NULL,
+  `UserCreationDate` DATETIME NOT NULL,
+  PRIMARY KEY (`UserID`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+CREATE UNIQUE INDEX `UserName_UNIQUE` ON `Users` (`UserName` ASC) VISIBLE;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
 -- Table `Profiles`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Profiles` ;
@@ -27,8 +46,20 @@ CREATE TABLE IF NOT EXISTS `Profiles` (
   `ProfileCreationDate` DATETIME NOT NULL,
   `ProfileName` VARCHAR(255) NOT NULL,
   `ProfileOpeningBalance` DECIMAL(12,2) NULL,
-  PRIMARY KEY (`ProfileID`))
+  `Users_UserID` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ProfileID`, `Users_UserID`),
+  CONSTRAINT `fk_Profiles_Users1`
+    FOREIGN KEY (`Users_UserID`)
+    REFERENCES `Users` (`UserID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+SHOW WARNINGS;
+CREATE INDEX `fk_Profiles_Users1_idx` ON `Profiles` (`Users_UserID` ASC) VISIBLE;
+
+SHOW WARNINGS;
+CREATE UNIQUE INDEX `ProfileID_UNIQUE` ON `Profiles` (`ProfileID` ASC) VISIBLE;
 
 SHOW WARNINGS;
 
@@ -81,10 +112,10 @@ ENGINE = InnoDB
 KEY_BLOCK_SIZE = 4;
 
 SHOW WARNINGS;
-CREATE INDEX `fk_Incomes_Profiles_idx` ON `Incomes` (`ProfileID` ASC) VISIBLE;
+CREATE INDEX `fk_Incomes_Category1_idx` ON `Incomes` (`CategoryID` ASC) VISIBLE;
 
 SHOW WARNINGS;
-CREATE INDEX `fk_Incomes_Category1_idx` ON `Incomes` (`CategoryID` ASC) VISIBLE;
+CREATE INDEX `fk_Incomes_Profiles_idx` ON `Incomes` (`ProfileID` ASC) VISIBLE;
 
 SHOW WARNINGS;
 
@@ -126,12 +157,12 @@ SHOW WARNINGS;
 USE `smartcapitaldatabase` ;
 
 -- -----------------------------------------------------
--- View `SavingsResult`
+-- View `Savings_Result`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `SavingsResult` ;
+DROP VIEW IF EXISTS `Savings_Result` ;
 SHOW WARNINGS;
 USE `smartcapitaldatabase`;
-CREATE  OR REPLACE VIEW `SavingsResult` AS
+CREATE  OR REPLACE VIEW `Savings_Result` AS
     SELECT 
         p.ProfileID,
         p.ProfileName,
@@ -149,6 +180,17 @@ SHOW WARNINGS;
 USE `smartcapitaldatabase`;
 
 DELIMITER $$
+
+USE `smartcapitaldatabase`$$
+DROP TRIGGER IF EXISTS `Users_BEFORE_INSERT` $$
+SHOW WARNINGS$$
+USE `smartcapitaldatabase`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `smartcapitaldatabase`.`Users_BEFORE_INSERT` BEFORE INSERT ON `Users` FOR EACH ROW
+BEGIN
+	SET NEW.UserCreationDate = NOW();
+END$$
+
+SHOW WARNINGS$$
 
 USE `smartcapitaldatabase`$$
 DROP TRIGGER IF EXISTS `Profiles_BEFORE_INSERT` $$
