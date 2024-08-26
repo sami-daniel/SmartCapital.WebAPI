@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartCapital.WebAPI.Domain.Domain;
 
 namespace SmartCapital.WebAPI.Infrastructure.Data.Contexts;

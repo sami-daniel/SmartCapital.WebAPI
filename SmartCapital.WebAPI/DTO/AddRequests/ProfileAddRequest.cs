@@ -1,7 +1,7 @@
 ﻿using SmartCapital.WebAPI.Domain.Domain;
 using System.ComponentModel.DataAnnotations;
 
-namespace SmartCapital.WebAPI.Application.DTO.AddRequests
+namespace SmartCapital.WebAPI.DTO.AddRequests
 {
     /// <summary>
     /// Representa uma solicitação para adicionar um novo perfil.

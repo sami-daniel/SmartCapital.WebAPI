@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations

@@ -46,7 +46,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             profileToAdd.ProfileName = profileToAdd.ProfileName.Trim();
 
-            using (var transaction = await _unitOfWork.StartTransactionAsync()) 
+            using (var transaction = await _unitOfWork.StartTransactionAsync())
             {
                 try
                 {
@@ -98,7 +98,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             ArgumentNullException.ThrowIfNull(updatedProfile, nameof(updatedProfile));
 
-            var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName ==  profileName);
+            var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName == profileName);
 
             if (!profiles.Any())
             {
@@ -135,7 +135,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
                 }
                 catch (DbUpdateException)
                 {
-                    await transaction.RollbackAsync(); 
+                    await transaction.RollbackAsync();
                     throw new ExistingProfileException($"Um Perfil com o nome {profile.ProfileName} já existe.");
                 }
             }

@@ -1,5 +1,4 @@
-﻿using SmartCapital.WebAPI.Application.DTO.AddRequests;
-using SmartCapital.WebAPI.Domain.Domain;
+﻿using SmartCapital.WebAPI.Domain.Domain;
 using System.ComponentModel.DataAnnotations;
 
 namespace SmartCapital.WebAPI.DTO.UpdateRequests

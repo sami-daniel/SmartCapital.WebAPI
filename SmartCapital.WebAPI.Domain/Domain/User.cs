@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SmartCapital.WebAPI.Domain.Domain;
+﻿namespace SmartCapital.WebAPI.Domain.Domain;
 
 public partial class User
 {
