@@ -1,4 +1,4 @@
-ï»¿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.Domain.Domain;
@@ -9,21 +9,29 @@ using System.Text.RegularExpressions;
 namespace SmartCapital.WebAPI.Application.Implementations
 {
     /// <summary>
-    /// Fornece a implementaÃ§Ã£o dos serviÃ§os relacionados a perfis, incluindo operaÃ§Ãµes CRUD e filtragem.
+    /// Fornece a implementação dos serviços relacionados a perfis, incluindo operações CRUD e filtragem.
     /// </summary>
     public class ProfileService : IProfileService
     {
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Inicializa uma nova instÃ¢ncia da classe <see cref="ProfileService"/> com a unidade de trabalho fornecida.
+        /// Inicializa uma nova instância da classe <see cref="ProfileService"/> com a unidade de trabalho fornecida.
         /// </summary>
-        /// <param name="unitOfWork">A unidade de trabalho usada para gerenciar operaÃ§Ãµes de repositÃ³rio e transaÃ§Ãµes.</param>
+        /// <param name="unitOfWork">A unidade de trabalho usada para gerenciar operações de repositório e transações.</param>
         public ProfileService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Adiciona um novo perfil ao sistema.
+        /// </summary>
+        /// <param name="profileToAdd">O perfil a ser adicionado.</param>
+        /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
+        /// <exception cref="ArgumentNullException">Lançada quando o perfil a ser adicionado é nulo.</exception>
+        /// <exception cref="ArgumentException">Lançada quando o nome do perfil é inválido.</exception>
+        /// <exception cref="ExistingProfileException">Lançada quando um perfil com o mesmo nome já existe.</exception>
         public async Task AddProfileAsync(Profile profileToAdd)
         {
             ArgumentNullException.ThrowIfNull(profileToAdd, nameof(profileToAdd));
@@ -31,17 +39,17 @@ namespace SmartCapital.WebAPI.Application.Implementations
             ArgumentException.ThrowIfNullOrEmpty(profileToAdd.ProfileName, nameof(profileToAdd.ProfileName));
 
             if (profileToAdd.ProfileName.Length > 255 || profileToAdd.ProfileName.Length <= 0)
-                throw new ArgumentException("O tamanho do Nome do Perfil nÃ£o pode exceder 255 caracteres e nÃ£o pode ser vazio..");
+                throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres e não pode ser vazio.");
 
             if (!Regex.Match(profileToAdd.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
             {
-                throw new ArgumentException("O Nome do Perfil pode conter somente letras, nÃºmeros e espaÃ§os.");
+                throw new ArgumentException("O Nome do Perfil pode conter somente letras, números e espaços.");
             }
 
             if (profileToAdd.ProfileOpeningBalance != null)
             {
                 if (profileToAdd.ProfileOpeningBalance > 999_999_999.99m)
-                    throw new ArgumentException("O tamanho do Saldo Inicial do Perfil nÃ£o pode ser maior que 999.999.999,99.");
+                    throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
             }
 
             profileToAdd.ProfileName = profileToAdd.ProfileName.Trim();
@@ -57,21 +65,36 @@ namespace SmartCapital.WebAPI.Application.Implementations
                 catch (DbUpdateException)
                 {
                     await transaction.RollbackAsync();
-                    throw new ExistingProfileException($"Um Perfil com o nome {profileToAdd.ProfileName} jÃ¡ existe.");
+                    throw new ExistingProfileException($"Um Perfil com o nome {profileToAdd.ProfileName} já existe.");
                 }
             }
         }
 
+        /// <summary>
+        /// Obtém todos os perfis do sistema.
+        /// </summary>
+        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os perfis.</returns>
         public async Task<IEnumerable<Profile>> GetAllProfilesAsync()
         {
             return await _unitOfWork.ProfileRepository.GetAsync();
         }
 
+        /// <summary>
+        /// Obtém perfis que correspondem ao filtro fornecido.
+        /// </summary>
+        /// <param name="filter">Uma expressão que define o critério de filtragem dos perfis.</param>
+        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de perfis que atendem ao critério de filtro.</returns>
         public Task<IEnumerable<Profile>> GetFilteredProfilesAsync(Expression<Func<Profile, bool>> filter)
         {
             return _unitOfWork.ProfileRepository.GetAsync(filter: filter);
         }
 
+        /// <summary>
+        /// Obtém um perfil pelo nome.
+        /// </summary>
+        /// <param name="profileName">O nome do perfil a ser obtido.</param>
+        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o perfil com o nome especificado, ou nulo se nenhum perfil for encontrado.</returns>
+        /// <exception cref="ArgumentException">Lançada quando o nome do perfil é nulo ou vazio.</exception>
         public async Task<Profile?> GetProfileByNameAsync(string profileName)
         {
             ArgumentException.ThrowIfNullOrEmpty(profileName , nameof(profileName));
@@ -81,14 +104,39 @@ namespace SmartCapital.WebAPI.Application.Implementations
             return profiles.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Remove um perfil existente do sistema.
+        /// </summary>
+        /// <param name="profileToRemove">O perfil a ser removido.</param>
+        /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
+        /// <exception cref="ArgumentNullException">Lançada quando o perfil a ser removido é nulo.</exception>
         public async Task RemoveProfileAsync(Profile profileToRemove)
         {
-            ArgumentNullException.ThrowIfNull(profileToRemove, "O Perfil a Remover nÃ£o pode ser nulo.");
+            ArgumentNullException.ThrowIfNull(profileToRemove, "O Perfil a Remover não pode ser nulo.");
 
-            _unitOfWork.ProfileRepository.Delete(profileToRemove);
-            await _unitOfWork.CompleteAsync();
+            using (var transaction = await _unitOfWork.StartTransactionAsync())
+            {
+                try
+                {
+                    _unitOfWork.ProfileRepository.Delete(profileToRemove);
+                    await _unitOfWork.CompleteAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    await transaction.RollbackAsync();
+                    throw; // Isso deveria ser mapeado. Não pode ser lançado diretamente.
+                }
+            }
         }
 
+        /// <summary>
+        /// Atualiza um perfil existente no sistema.
+        /// </summary>
+        /// <param name="profileName">O nome do perfil a ser atualizado.</param>
+        /// <param name="updatedProfile">O objeto perfil atualizado.</param>
+        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o objeto perfil atualizado, ou nulo se o perfil não for encontrado.</returns>
+        /// <exception cref="ArgumentException">Lançada quando o nome do perfil ou o perfil atualizado é nulo ou inválido.</exception>
+        /// <exception cref="ExistingProfileException">Lançada quando um perfil com o mesmo nome já existe.</exception>
         public async Task<Profile?> UpdateProfileAsync(string profileName, Profile updatedProfile)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(profileName, nameof(profileName));
@@ -105,17 +153,17 @@ namespace SmartCapital.WebAPI.Application.Implementations
             var profile = profiles.First();
 
             if (profile.ProfileName.Length > 255)
-                throw new ArgumentException("O tamanho do Nome do Perfil nÃ£o pode exceder 255 caracteres.");
+                throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
 
             if (!Regex.Match(profile.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
             {
-                throw new ArgumentException("O Nome do Perfil pode conter somente letras, nÃºmeros e espaÃ§os.");
+                throw new ArgumentException("O Nome do Perfil pode conter somente letras, números e espaços.");
             }
 
             if (profile.ProfileOpeningBalance != null)
             {
                 if (profile.ProfileOpeningBalance > 999_999_999.99m)
-                    throw new ArgumentException("O tamanho do Saldo Inicial do Perfil nÃ£o pode ser maior que 999.999.999,99.");
+                    throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
             }
 
             updatedProfile.ProfileName = updatedProfile.ProfileName.Trim();
@@ -133,7 +181,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
                 catch (DbUpdateException)
                 {
                     await transaction.RollbackAsync();
-                    throw new ExistingProfileException($"Um Perfil com o nome {profile.ProfileName} jÃ¡ existe.");
+                    throw new ExistingProfileException($"Um Perfil com o nome {profile.ProfileName} já existe.");
                 }
             }
 
