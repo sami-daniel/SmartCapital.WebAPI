@@ -74,14 +74,11 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
         public async Task<Profile?> GetProfileByNameAsync(string profileName)
         {
+            ArgumentException.ThrowIfNullOrEmpty(profileName , nameof(profileName));
+
             var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName == profileName);
 
-            if (!profiles.Any())
-            {
-                return null;
-            }
-
-            return profiles.First();
+            return profiles.FirstOrDefault();
         }
 
         public async Task RemoveProfileAsync(Profile profileToRemove)

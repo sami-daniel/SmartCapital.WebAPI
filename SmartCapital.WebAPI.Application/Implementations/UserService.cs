@@ -56,14 +56,22 @@ namespace SmartCapital.WebAPI.Application.Implementations
             }
         }
 
-        public Task<Profile?> GetProfileByNameAsync(string userName)
+        public async Task<User?> GetProfileByNameAsync(string userName)
         {
-            throw new NotImplementedException();
+            ArgumentException.ThrowIfNullOrEmpty(userName, nameof(userName));
+
+            var users = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName);
+
+            return users.FirstOrDefault();
         }
 
-        public Task RemoveUserAsync(User userToRemove)
+        public async Task RemoveUserAsync(User userToRemove)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(userToRemove, nameof(userToRemove));
+
+            _unitOfWork.UserRepository.Delete(userToRemove);
+
+            await _unitOfWork.CompleteAsync();
         }
     }
 }

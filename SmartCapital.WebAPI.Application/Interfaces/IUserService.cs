@@ -27,7 +27,7 @@ namespace SmartCapital.WebAPI.Application.Interfaces
         /// <param name="userName">O nome do usuário a ser obtido.</param>
         /// <returns>O usuário correspondente ao nome fornecido.</returns>
         /// <remarks>Se não for encontrado nenhum usuário, é retornado <c>null</c>.</remarks>
-        public Task<Profile?> GetProfileByNameAsync(string userName);
+        public Task<User?> GetProfileByNameAsync(string userName);
 
     }
 }
