@@ -45,7 +45,7 @@ namespace SmartCapital.WebAPI.Controllers
 
             return Ok(new
             {
-                User = user,
+                User = user.UserName,
                 Token = token
             });
         }

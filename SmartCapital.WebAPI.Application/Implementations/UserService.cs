@@ -35,7 +35,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
             if (userToAdd.UserName.Length > 255 || userToAdd.UserName.Length <= 0)
                 throw new ArgumentException("O tamanho do Nome do Usuário não pode exceder 255 caracteres e não pode ser vazio.");
 
-            if (userToAdd.UserPassword.Length > 255 || userToAdd.UserPassword.Length >= 0)
+            if (userToAdd.UserPassword.Length > 255 || userToAdd.UserPassword.Length <= 0)
                 throw new ArgumentException("O tamanho da Senha do Usuário não pode exceder 255 caracteres e não pode ser vazio.");
 
             userToAdd.UserName = userToAdd.UserName.Trim();
