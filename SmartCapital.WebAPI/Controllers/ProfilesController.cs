@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.Domain.Domain;
@@ -14,6 +15,7 @@ namespace SmartCapital.WebAPI.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProfilesController : ControllerBase
     {
         private readonly IProfileService _profileService;

@@ -22,14 +22,14 @@ namespace SmartCapital.WebAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IUserService _userService;
+        private readonly ILoginService _userService;
 
         /// <summary>
         /// Inicializa uma nova instância de <see cref="AuthController"/> com o serviço de usuários fornecido.
         /// </summary>
         /// <param name="userService">Serviço para gerenciar operações de usuários.</param>
         /// <param name="configuration">Set de configurações do projeto</param>
-        public AuthController(IConfiguration configuration, IUserService userService)
+        public AuthController(IConfiguration configuration, ILoginService userService)
         {
             _configuration = configuration;
             _userService = userService;
@@ -49,22 +49,20 @@ namespace SmartCapital.WebAPI.Controllers
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> Authenticate([FromBody] UserLoginRequest userLoginRequest)
         {
-            var user = await _userService.GetProfileByNameAsync(userLoginRequest.UserName!);
+            var user = await _userService.GetUserAsync(userLoginRequest.UserName, userLoginRequest.UserPassword);
 
             if (user == null)
                 return NotFound(new ErrorResponse
                 {
                     ErrorType = "UserFindError",
-                    Message = "O Usuário com o nome especificado não foi encontrado."
+                    Message = "O Usuário com o nome e senha especificados não foi encontrado."
                 });
 
             var token = GenerateToken(userLoginRequest);
             user.UserPassword = "";
-
             return Ok(new UserLoginResponse
             {
                 User = user.UserName,
-                Role = User.Claims.First(u => u.ValueType == ClaimTypes.Role).Value,
                 Token = token
             });
         }
