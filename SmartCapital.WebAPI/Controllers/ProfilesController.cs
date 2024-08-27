@@ -75,7 +75,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="201">Perfil criado com sucesso.</response>
         /// <response code="400">Erro ao criar o perfil, devido a problemas de validação ou duplicidade.</response>
         [HttpPost]
-        [ProducesResponseType(201)]
+        [ProducesResponseType(typeof(ProfileResponse), 201)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profile)
         {
