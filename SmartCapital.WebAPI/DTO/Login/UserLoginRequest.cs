@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartCapital.WebAPI.Models
+namespace SmartCapital.WebAPI.DTO.Login
 {
     public class UserLoginRequest
     {

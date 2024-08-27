@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.DTO.AddRequests;
+using SmartCapital.WebAPI.DTO.Login;
 using SmartCapital.WebAPI.DTO.Responses;
 using SmartCapital.WebAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
