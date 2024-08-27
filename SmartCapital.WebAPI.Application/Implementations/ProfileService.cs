@@ -30,8 +30,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             ArgumentException.ThrowIfNullOrEmpty(profileToAdd.ProfileName, nameof(profileToAdd.ProfileName));
 
-            if (profileToAdd.ProfileName.Length > 255)
-                throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
+            if (profileToAdd.ProfileName.Length > 255 || profileToAdd.ProfileName.Length <= 0)
+                throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres e não pode ser vazio..");
 
             if (!Regex.Match(profileToAdd.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
             {
