@@ -58,7 +58,7 @@ namespace SmartCapital.WebAPI.Controllers
                     Message = "O Usuário com o nome especificado não foi encontrado."
                 });
 
-            var token = GenerateToken(user.ToUserResponse());
+            var token = GenerateToken(userLoginRequest);
             user.UserPassword = "";
 
             return Ok(new
@@ -76,7 +76,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <returns>O token JWT gerado.</returns>
         /// <exception cref="InvalidOperationException">Lançado quando a configuração do segredo JWT está ausente.</exception>
         [NonAction]
-        public string GenerateToken(UserResponse user)
+        public string GenerateToken(UserLoginRequest user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["JWTSettings:Secret"] ?? throw new InvalidOperationException("O token do JWT (secret) não está definido."));
