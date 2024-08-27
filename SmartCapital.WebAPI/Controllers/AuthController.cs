@@ -43,7 +43,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="200">Retorna o nome do usuário, a Role e o token JWT.</response>
         /// <response code="404">Retorna um erro se o usuário com o nome especificado não for encontrado.</response>
         /// <response code="400">Retorna um erro se a solicitação estiver malformada.</response>
-        [HttpPost]
+        [HttpPost("authenticate")]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
