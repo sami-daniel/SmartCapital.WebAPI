@@ -61,7 +61,7 @@ namespace SmartCapital.WebAPI.Controllers
             var token = GenerateToken(userLoginRequest);
             user.UserPassword = "";
 
-            return Ok(new
+            return Ok(new UserLoginResponse
             {
                 User = user.UserName,
                 Role = User.Claims.First(u => u.ValueType == ClaimTypes.Role).Value,
