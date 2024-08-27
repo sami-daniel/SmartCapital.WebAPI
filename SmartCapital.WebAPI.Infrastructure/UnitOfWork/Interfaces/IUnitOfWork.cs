@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
+using SmartCapital.WebAPI.Domain.Domain;
 
 namespace SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces
 {
@@ -15,6 +16,14 @@ namespace SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces
         /// Uma instância do repositório para a entidade <see cref="Profile"/>.
         /// </value>
         public IProfileRepository ProfileRepository { get; }
+
+        /// <summary>
+        /// Obtém o repositório para a entidade <see cref="User"/>.
+        /// </summary>
+        /// <value>
+        /// Uma instância do repositório para a entidade <see cref="User"/>.
+        /// </value>
+        public IUserRepository UserRepository { get; }
 
         /// <summary>
         /// Salva todas as alterações feitas no contexto atual de banco de dados.

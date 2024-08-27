@@ -12,9 +12,12 @@ namespace SmartCapital.WebAPI.Infrastructure.UnitOfWork.Implementations
 
         public IProfileRepository ProfileRepository { get; }
 
-        public UnitOfWork(IProfileRepository profileRepository, ApplicationDbContext applicationDbContext)
+        public IUserRepository UserRepository { get; }
+
+        public UnitOfWork(IProfileRepository profileRepository, IUserRepository userRepository, ApplicationDbContext applicationDbContext)
         {
             ProfileRepository = profileRepository;
+            UserRepository = userRepository;
             _context = applicationDbContext;
         }
 
