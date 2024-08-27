@@ -8,8 +8,8 @@ namespace SmartCapital.WebAPI.Models
     public class ErrorResponse
     {
         [Required]
-        public required string ErrorType { get; set; }
+        public string ErrorType { get; set; } = null!; // Prefer null! to required modifier
         [Required]
-        public required string Message { get; set; }
+        public string Message { get; set; } = null!;
     }
 }
