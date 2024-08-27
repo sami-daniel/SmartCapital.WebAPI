@@ -13,6 +13,9 @@ using System.Text;
 
 namespace SmartCapital.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controlador responsável por gerenciar operações relacionadas a autenticação.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
