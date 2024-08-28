@@ -66,6 +66,7 @@ namespace SmartCapital.WebAPI
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IProfileService, ProfileService>();
             builder.Services.AddScoped<ILoginService, LoginService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
