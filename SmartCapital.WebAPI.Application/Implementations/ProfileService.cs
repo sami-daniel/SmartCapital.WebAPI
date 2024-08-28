@@ -38,8 +38,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             ArgumentException.ThrowIfNullOrEmpty(profileToAdd.ProfileName, nameof(profileToAdd.ProfileName));
 
-            if (profileToAdd.ProfileName.Length > 255 || profileToAdd.ProfileName.Length <= 0)
-                throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres e não pode ser vazio.");
+            if (profileToAdd.ProfileName.Length > 255)
+                throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
 
             if (!Regex.Match(profileToAdd.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
             {
@@ -142,6 +142,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
             ArgumentNullException.ThrowIfNullOrEmpty(profileName, nameof(profileName));
 
             ArgumentNullException.ThrowIfNull(updatedProfile, nameof(updatedProfile));
+
+            ArgumentException.ThrowIfNullOrEmpty(updatedProfile.ProfileName, nameof(updatedProfile.ProfileName));
 
             var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName == profileName);
 
