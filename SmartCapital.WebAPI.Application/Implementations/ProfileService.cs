@@ -97,7 +97,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
         /// <exception cref="ArgumentException">Lançada quando o nome do perfil é nulo ou vazio.</exception>
         public async Task<Profile?> GetProfileByNameAsync(string profileName)
         {
-            ArgumentException.ThrowIfNullOrEmpty(profileName , nameof(profileName));
+            ArgumentException.ThrowIfNullOrEmpty(profileName, nameof(profileName));
 
             var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName == profileName);
 
@@ -114,19 +114,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
         {
             ArgumentNullException.ThrowIfNull(profileToRemove, "O Perfil a Remover não pode ser nulo.");
 
-            using (var transaction = await _unitOfWork.StartTransactionAsync())
-            {
-                try
-                {
-                    _unitOfWork.ProfileRepository.Delete(profileToRemove);
-                    await _unitOfWork.CompleteAsync();
-                }
-                catch (DbUpdateException)
-                {
-                    await transaction.RollbackAsync();
-                    throw; // Isso deveria ser mapeado. Não pode ser lançado diretamente.
-                }
-            }
+            _unitOfWork.ProfileRepository.Delete(profileToRemove);
+            await _unitOfWork.CompleteAsync();
         }
 
         /// <summary>

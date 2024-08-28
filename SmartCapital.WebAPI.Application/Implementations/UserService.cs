@@ -39,8 +39,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
             ArgumentException.ThrowIfNullOrEmpty(userToAdd.UserName, nameof(userToAdd.UserName));
             ArgumentException.ThrowIfNullOrEmpty(userToAdd.UserPassword, nameof(userToAdd.UserPassword));
 
-            if (userToAdd.UserName.Length > 255 || userToAdd.UserName.Length <= 0)
-                throw new ArgumentException("O tamanho do nome de usuário não pode exceder 255 caracteres e não pode ser vazio.");
+            if (userToAdd.UserName.Length > 255)
+                throw new ArgumentException("O tamanho do nome de usuário não pode exceder 255 caracteres.");
 
             if (!Regex.Match(userToAdd.UserName, "^[a-zA-Z0-9 ]*$").Success)
             {
@@ -48,7 +48,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
             }
 
             userToAdd.UserName = userToAdd.UserName.Trim();
-            userToAdd.UserCreationDate = DateTime.UtcNow;
+
+            userToAdd.UserPassword = BCrypt.Net.BCrypt.HashPassword(userToAdd.UserPassword);
 
             using (var transaction = await _unitOfWork.StartTransactionAsync())
             {
@@ -145,6 +146,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
             }
 
             updatedUser.UserName = updatedUser.UserName.Trim();
+
+            updatedUser.UserPassword = BCrypt.Net.BCrypt.HashPassword(updatedUser.UserPassword);
 
             user.UserName = updatedUser.UserName;
             user.UserPassword = updatedUser.UserPassword;
