@@ -160,7 +160,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.UserCreationDate).HasColumnType("datetime");
-            entity.Property(e => e.UserPassword).HasMaxLength(255);
+            entity.Property(e => e.UserPassword).HasMaxLength(60);
         });
 
         OnModelCreatingPartial(modelBuilder);
