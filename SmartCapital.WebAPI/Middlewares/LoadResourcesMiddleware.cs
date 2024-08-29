@@ -28,7 +28,8 @@ namespace SmartCapital.WebAPI.Middlewares
                 var jwtSecurity = new JwtSecurityTokenHandler();
                 var securityToken = jwtSecurity.ReadJwtToken(token);
                 var name = securityToken.Claims.First(claim => claim.Type == "unique_name").Value;
-                
+                var role = securityToken.Claims.First(claim => claim.Type == "role").Value;
+
                 httpContext.Items["User"] = name;
             }
 
