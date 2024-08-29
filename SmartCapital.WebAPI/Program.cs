@@ -88,7 +88,7 @@ namespace SmartCapital.WebAPI
 
             app.UseAuthorization();
 
-            app.UseMiddleware<LoadResourceMiddleware>();
+            app.UseMiddleware<LoadUserNameMiddleware>();
 
             app.MapControllers();
 

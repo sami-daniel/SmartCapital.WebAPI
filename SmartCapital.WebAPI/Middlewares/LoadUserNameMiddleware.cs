@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace SmartCapital.WebAPI.Middlewares
 {
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
-    public class LoadResourceMiddleware
+    public class LoadUserNameMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public LoadResourceMiddleware(RequestDelegate next)
+        public LoadUserNameMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -28,10 +28,8 @@ namespace SmartCapital.WebAPI.Middlewares
                 var jwtSecurity = new JwtSecurityTokenHandler();
                 var securityToken = jwtSecurity.ReadJwtToken(token);
                 var name = securityToken.Claims.First(claim => claim.Type == "unique_name").Value;
-
-                var user = await userService.GetUserByNameAsync(name)!;
                 
-                httpContext.Items["User"] = user;
+                httpContext.Items["User"] = name;
             }
 
             await _next(httpContext);
@@ -43,7 +41,7 @@ namespace SmartCapital.WebAPI.Middlewares
     {
         public static IApplicationBuilder UseMiddleware(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<LoadResourceMiddleware>();
+            return builder.UseMiddleware<LoadUserNameMiddleware>();
         }
     }
 }
