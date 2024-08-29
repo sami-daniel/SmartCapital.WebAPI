@@ -52,5 +52,36 @@ namespace SmartCapital.WebAPI.Controllers
 
             return Ok(filteredProfiles.Select(p => p.ToProfileResponse()));
         }
+
+        public async Task<IActionResult> GetProfileByName(string profileName)
+        {
+            var user = HttpContext.Items["User"] as string;
+            var role = HttpContext.Items["Role"] as string;
+
+            if (role == "Admin")
+            {
+                var profile = await _profileService.GetProfileByNameAsync(profileName);
+
+                if (profile == null)
+                    return NotFound(new ErrorResponse
+                    {
+                        ErrorType = "ProfileFindError",
+                        Message = "O perfil com o nome especificado não foi encontrado."
+                    });
+
+                return Ok(profile);
+            }
+
+            var filteredProfiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == user && p.ProfileName == profileName);
+
+            if (!filteredProfiles.Any())
+                return NotFound(new ErrorResponse
+                {
+                    ErrorType = "ProfileFindError",
+                    Message = "O perfil com o nome especificado não foi encontrado."
+                });
+
+            return Ok(filteredProfiles.First());
+        }
     }
 }
