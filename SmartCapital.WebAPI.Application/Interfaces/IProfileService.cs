@@ -12,8 +12,9 @@ namespace SmartCapital.WebAPI.Application.Interfaces
         /// Adiciona um novo perfil ao sistema.
         /// </summary>
         /// <param name="profileToAdd">O perfil a ser adicionado.</param>
+        /// <param name="userName">O nome do usuário que está adicionando o perfil.</param>
         /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
-        public Task AddProfileAsync(Profile profileToAdd);
+        public Task AddProfileAsync(Profile profileToAdd, string userName);
 
         /// <summary>
         /// Atualiza um perfil existente no sistema.

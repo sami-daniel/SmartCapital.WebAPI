@@ -32,9 +32,11 @@ namespace SmartCapital.WebAPI.Application.Implementations
         /// <exception cref="ArgumentNullException">Lançada quando o perfil a ser adicionado é nulo.</exception>
         /// <exception cref="ArgumentException">Lançada quando o nome do perfil é inválido.</exception>
         /// <exception cref="ExistingProfileException">Lançada quando um perfil com o mesmo nome já existe.</exception>
-        public async Task AddProfileAsync(Profile profileToAdd)
+        public async Task AddProfileAsync(Profile profileToAdd, string userName)
         {
             ArgumentNullException.ThrowIfNull(profileToAdd, nameof(profileToAdd));
+
+            ArgumentException.ThrowIfNullOrEmpty(userName, nameof(userName));
 
             ArgumentException.ThrowIfNullOrEmpty(profileToAdd.ProfileName, nameof(profileToAdd.ProfileName));
 
@@ -54,11 +56,16 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             profileToAdd.ProfileName = profileToAdd.ProfileName.Trim();
 
+            var user = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName);
+
+            if (!user.Any())
+                throw new ArgumentException("O Usuário que está adicionando o Perfil não foi encontrado.");
+
             using (var transaction = await _unitOfWork.StartTransactionAsync())
             {
                 try
                 {
-                    await _unitOfWork.ProfileRepository.InsertAsync(profileToAdd);
+                    user.First().Profiles.Add(profileToAdd);
                     await _unitOfWork.CompleteAsync();
                     await transaction.CommitAsync();
                 }

@@ -108,6 +108,8 @@ namespace SmartCapital.WebAPI.Controllers
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profileAddRequest)
         {
             var name = HttpContext.Items["User"] as string;
+
+            var user = await _userService.GetUserByNameAsync(name!);
             
             if (profileAddRequest == null)
                 return BadRequest(new ErrorResponse()
@@ -118,7 +120,7 @@ namespace SmartCapital.WebAPI.Controllers
 
             try
             {
-                await _profileService.AddProfileAsync(profileAddRequest.ToProfile());
+                await _profileService.AddProfileAsync(profileAddRequest.ToProfile(), name!);
             }
             catch (ExistingProfileException e)
             {
