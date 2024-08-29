@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace SmartCapital.WebAPI.Middlewares
 {
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
-    public class LoadUserNameMiddleware
+    public class LoadResourcesMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public LoadUserNameMiddleware(RequestDelegate next)
+        public LoadResourcesMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -41,7 +41,7 @@ namespace SmartCapital.WebAPI.Middlewares
     {
         public static IApplicationBuilder UseMiddleware(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<LoadUserNameMiddleware>();
+            return builder.UseMiddleware<LoadResourcesMiddleware>();
         }
     }
 }
