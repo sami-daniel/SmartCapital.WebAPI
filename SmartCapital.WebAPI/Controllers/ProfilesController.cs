@@ -92,6 +92,15 @@ namespace SmartCapital.WebAPI.Controllers
             return Ok(filteredProfiles.First());
         }
 
+        /// <summary>
+        /// Adiciona um novo perfil.
+        /// </summary>
+        /// <param name="profileAddRequest">Objeto contendo as informações do perfil a ser adicionado.</param>
+        /// <returns>Um resultado indicando o sucesso ou falha da operação.</returns>
+        /// <response code="201">Perfil criado com sucesso.</response>
+        /// <response code="400">Erro na solicitação de adição de perfil.</response>
+        [ProducesResponseType(typeof(UserResponse), 201)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profileAddRequest)
         {
             var name = HttpContext.Items["User"] as string;

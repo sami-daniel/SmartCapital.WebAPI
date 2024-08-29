@@ -89,8 +89,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <param name="user">Dados do usuário a ser criado.</param>
         /// <returns>O usuário recém-criado.</returns>
         /// <response code="201">Usuário criado com sucesso.</response>
-        /// <response code="400">Erro ao criar o usuário, devido a problemas de validação ou duplicidade.</response>
-
+        /// <response code="400">Erro ao criar o usuário, devido a problemas de validação ou duplicidade.</response>s
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(typeof(UserResponse), 201)]
