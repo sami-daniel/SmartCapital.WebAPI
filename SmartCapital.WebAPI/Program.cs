@@ -36,8 +36,8 @@ namespace SmartCapital.WebAPI
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = true,
-                        ValidateAudience = true
+                        ValidateIssuer = false,
+                        ValidateAudience = false
                     };
                 });
             builder.Services.AddRouting(opt =>
