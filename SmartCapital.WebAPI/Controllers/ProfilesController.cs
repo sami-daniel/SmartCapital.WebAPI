@@ -28,5 +28,21 @@ namespace SmartCapital.WebAPI.Controllers
         {
             _profileService = profileService;
         }
+
+        /// <summary>
+        /// Obtém uma lista de todos os perfis existentes.
+        /// </summary>
+        /// <returns>Uma lista de objetos <see cref="ProfileResponse"/> representado todos os perfis existente no sistem</returns>
+        /// <response code="200">Perfis encontrados com sucesso.</response>
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ProfileResponse>), 200)]
+        public async Task<IActionResult> GetProfiles()
+        {
+            var user = HttpContext.Items["User"] as User;
+
+            var profiles = await _profileService.GetAllProfilesAsync();
+
+            return Ok(profiles.Select(p => p.ToProfileResponse()));
+        }
     }
 }

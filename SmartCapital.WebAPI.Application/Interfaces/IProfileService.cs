@@ -37,7 +37,9 @@ namespace SmartCapital.WebAPI.Application.Interfaces
         /// Obtém todos os perfis do sistema.
         /// </summary>
         /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os perfis.</returns>
-        public Task<IEnumerable<Profile>> GetAllProfilesAsync();
+        public Task<IEnumerable<Profile>> GetAllProfilesAsync(Expression<Func<Profile, bool>>? filter = null,
+                                                                    Func<IQueryable<Profile>, IOrderedQueryable<Profile>>? orderBy = null,
+                                                                    string includeProperties = "");
 
         /// <summary>
         /// Obtém perfis que correspondem ao filtro fornecido.
