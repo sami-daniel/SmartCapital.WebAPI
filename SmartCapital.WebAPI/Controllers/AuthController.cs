@@ -59,10 +59,13 @@ namespace SmartCapital.WebAPI.Controllers
                 });
 
             var token = GenerateToken(userLoginRequest);
-            user.UserPassword = "";
+            var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var role = jwtToken.Claims.First(claim => claim.Type == "role").Value;
+
             return Ok(new UserLoginResponse
             {
                 User = user.UserName,
+                Role = role,
                 Token = token
             });
         }
