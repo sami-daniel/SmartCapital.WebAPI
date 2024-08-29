@@ -9,6 +9,7 @@ using SmartCapital.WebAPI.Infrastructure.Repository.Implementations;
 using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Implementations;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
+using SmartCapital.WebAPI.Middlewares;
 using System.Reflection;
 using System.Text;
 
@@ -86,6 +87,8 @@ namespace SmartCapital.WebAPI
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<LoadResourceMiddleware>();
 
             app.MapControllers();
 
