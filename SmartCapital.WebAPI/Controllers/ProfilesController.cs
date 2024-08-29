@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
-using SmartCapital.WebAPI.Domain.Domain;
-using SmartCapital.WebAPI.DTO.AddRequests;
 using SmartCapital.WebAPI.DTO.Responses;
-using SmartCapital.WebAPI.DTO.UpdateRequests;
 using SmartCapital.WebAPI.Models;
 
 namespace SmartCapital.WebAPI.Controllers
@@ -40,14 +36,14 @@ namespace SmartCapital.WebAPI.Controllers
         {
             var user = HttpContext.Items["User"] as string;
             var role = HttpContext.Items["Role"] as string;
-            
+
             if (role == "Admin")
             {
                 var profiles = await _profileService.GetAllProfilesAsync();
 
                 return Ok(profiles);
             }
-            
+
             var filteredProfiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == user);
 
             return Ok(filteredProfiles.Select(p => p.ToProfileResponse()));

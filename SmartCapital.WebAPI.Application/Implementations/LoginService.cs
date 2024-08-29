@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartCapital.WebAPI.Application.Exceptions;
-using SmartCapital.WebAPI.Application.Interfaces;
+﻿using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.Domain.Domain;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
-using System.Text.RegularExpressions;
 
 namespace SmartCapital.WebAPI.Application.Implementations
 {

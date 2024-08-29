@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using SmartCapital.WebAPI.Application.Interfaces;
+﻿using SmartCapital.WebAPI.Application.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace SmartCapital.WebAPI.Middlewares
 {

@@ -8,7 +8,7 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Implementations
     /// <summary>
     /// Implementa um repositório específico para a entidade <see cref="User"/>.
     /// </summary>
-    public class UserRepository : Repository<User> ,IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
         /// <summary>
         /// Inicializa uma nova instância da classe <see cref="UserRepository"/> com o contexto de banco de dados fornecido.

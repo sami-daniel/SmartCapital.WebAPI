@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 using SmartCapital.WebAPI.Domain.Domain;
+using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 
 namespace SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces
 {

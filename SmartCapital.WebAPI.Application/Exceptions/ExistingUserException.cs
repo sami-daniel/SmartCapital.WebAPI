@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace SmartCapital.WebAPI.Application.Exceptions
+﻿namespace SmartCapital.WebAPI.Application.Exceptions
 {
     public class ExistingUserException : Exception
     {
