@@ -53,6 +53,16 @@ namespace SmartCapital.WebAPI.Controllers
             return Ok(filteredProfiles.Select(p => p.ToProfileResponse()));
         }
 
+        /// <summary>
+        /// Obtém um perfil pelo nome especificado.
+        /// </summary>
+        /// <param name="profileName">Nome do perfil a ser obtido.</param>
+        /// <returns>O perfil correspondente ao nome especificado.</returns>
+        /// <response code="200">Perfil encontrado com sucesso.</response>
+        /// <response code="404">Perfil com o nome especificado não foi encontrado.</response>
+        [HttpGet("{profileName}")]
+        [ProducesResponseType(typeof(ProfileResponse), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> GetProfileByName(string profileName)
         {
             var user = HttpContext.Items["User"] as string;
