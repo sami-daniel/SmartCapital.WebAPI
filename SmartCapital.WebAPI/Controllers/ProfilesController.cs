@@ -38,11 +38,19 @@ namespace SmartCapital.WebAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<ProfileResponse>), 200)]
         public async Task<IActionResult> GetProfiles()
         {
-            var user = HttpContext.Items["User"] as User;
+            var user = HttpContext.Items["User"] as string;
+            var role = HttpContext.Items["Role"] as string;
+            
+            if (role == "Admin")
+            {
+                var profiles = await _profileService.GetAllProfilesAsync();
 
-            var profiles = await _profileService.GetAllProfilesAsync();
+                return Ok(profiles);
+            }
+            
+            var filteredProfiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == user);
 
-            return Ok(profiles.Select(p => p.ToProfileResponse()));
+            return Ok(filteredProfiles.Select(p => p.ToProfileResponse()));
         }
     }
 }
