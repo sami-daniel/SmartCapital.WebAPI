@@ -17,13 +17,16 @@ namespace SmartCapital.WebAPI.Controllers
     public class ProfilesController : ControllerBase
     {
         private readonly IProfileService _profileService;
+        private readonly IUserService _userService;
 
         /// <summary>
         /// Inicializa uma nova instância de <see cref="ProfilesController"/> com o serviço de perfis fornecido.
         /// </summary>
         /// <param name="profileService">Serviço para gerenciar operações de perfil.</param>
-        public ProfilesController(IProfileService profileService)
+        /// <param name="userService">Serviço para gerenciar operações de usuário.</param>
+        public ProfilesController(IProfileService profileService, IUserService userService)
         {
+            _userService = userService;
             _profileService = profileService;
         }
 
@@ -99,12 +102,13 @@ namespace SmartCapital.WebAPI.Controllers
         /// <returns>Um resultado indicando o sucesso ou falha da operação.</returns>
         /// <response code="201">Perfil criado com sucesso.</response>
         /// <response code="400">Erro na solicitação de adição de perfil.</response>
+        [HttpPost]
         [ProducesResponseType(typeof(UserResponse), 201)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profileAddRequest)
         {
             var name = HttpContext.Items["User"] as string;
-
+            
             if (profileAddRequest == null)
                 return BadRequest(new ErrorResponse()
                 {
