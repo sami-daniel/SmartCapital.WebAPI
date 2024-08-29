@@ -13,7 +13,7 @@ namespace SmartCapital.WebAPI.Controllers
     /// <summary>
     /// Controlador responsável por gerenciar operações relacionadas a usuários.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase
