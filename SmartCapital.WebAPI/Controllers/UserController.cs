@@ -34,7 +34,9 @@ namespace SmartCapital.WebAPI.Controllers
         /// </summary>
         /// <returns>Uma lista de objetos <see cref="UserResponse"/> representando todos os usuários existentes no sistema.</returns>
         /// <response code="200">Usuários encontrados com sucesso.</response>
+        /// <response code="403">Não autorizado o acesso ao recurso.</response>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(IEnumerable<UserResponse>), 200)]
         public async Task<IActionResult> GetUsers()
         {
@@ -50,17 +52,34 @@ namespace SmartCapital.WebAPI.Controllers
         /// <returns>Um objeto <see cref="UserResponse"/> representando o usuário encontrado.</returns>
         /// <response code="200">Usuário encontrado com sucesso.</response>
         /// <response code="404">Usuário com o nome fornecido não encontrado.</response>
+        /// <response code="403">Não autorizado o acesso ao recurso.</response>
+        
         [HttpGet("{userName}")]
         [ProducesResponseType(typeof(UserResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> GetUserByName([FromRoute] string userName)
         {
             var users = await _userService.GetFilteredUsersAsync(u => u.UserName == userName);
+            var userNameFromToken = HttpContext.Items["User"] as string;
+
+            var userFromToken = await _userService.GetUserByNameAsync(userNameFromToken!);
+
 
             if (users.Any())
             {
-                return Ok(users.First().ToUserResponse());
+                var usrFirst = users.First();
+                
+                if (userFromToken!.UserName != usrFirst.UserName)
+                {
+                    return Forbid();
+                }
+
+
+                return Ok(usrFirst);
             }
+
+            
 
             return NotFound(new ErrorResponse
             {
@@ -76,6 +95,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <returns>O usuário recém-criado.</returns>
         /// <response code="201">Usuário criado com sucesso.</response>
         /// <response code="400">Erro ao criar o usuário, devido a problemas de validação ou duplicidade.</response>
+        
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(typeof(UserResponse), 201)]
@@ -112,13 +132,17 @@ namespace SmartCapital.WebAPI.Controllers
         /// <param name="userName">Nome do usuário a ser excluído.</param>
         /// <returns>Status indicando o resultado da operação.</returns>
         /// <response code="204">Usuário excluído com sucesso.</response>
+        /// <response code="403">Não autorizado o acesso ao recurso.</response>
         /// <response code="404">Usuário com o nome fornecido não encontrado.</response>
         [HttpDelete("{userName}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> DeleteUser([FromRoute] string userName)
         {
             var userToRemove = await _userService.GetUserByNameAsync(userName);
+            
+            var userNameFromToken = HttpContext.Items["User"] as string;
 
             if (userToRemove == null)
                 return NotFound(new ErrorResponse
@@ -126,6 +150,11 @@ namespace SmartCapital.WebAPI.Controllers
                     ErrorType = "UserNotFound",
                     Message = "O usuário com o nome fornecido não foi encontrado."
                 });
+
+            if (userNameFromToken != userToRemove.UserName)
+            {
+                return Forbid();
+            }
 
             await _userService.RemoveUserAsync(userToRemove);
 
@@ -140,17 +169,26 @@ namespace SmartCapital.WebAPI.Controllers
         /// <returns>Status indicando o resultado da operação.</returns>
         /// <response code="204">Usuário atualizado com sucesso.</response>
         /// <response code="400">Erro na atualização do usuário, devido a problemas de validação ou duplicidade.</response>
+        /// <response code="403">Não autorizado o acesso ao recurso.</response>
         /// <response code="404">Usuário com o nome fornecido não encontrado.</response>
         [HttpPut("{userName}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> UpdateUser([FromRoute] string userName, [FromBody] UserUpdateRequest user)
         {
             User? updatedUser;
+            
+            var userNameFromToken = HttpContext.Items["User"] as string;
 
             try
             {
+                if (userNameFromToken != userName)
+                {
+                    return Forbid();
+                }
+
                 updatedUser = await _userService.UpdateUserAsync(userName, user.ToUser());
             }
             catch (ArgumentException ex)
