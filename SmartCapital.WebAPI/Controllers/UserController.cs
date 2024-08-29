@@ -37,6 +37,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="403">Não autorizado o acesso ao recurso.</response>
         [HttpGet]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(403)]
         [ProducesResponseType(typeof(IEnumerable<UserResponse>), 200)]
         public async Task<IActionResult> GetUsers()
         {
