@@ -97,6 +97,15 @@ namespace SmartCapital.WebAPI.Controllers
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> AddUser([FromBody] UserAddRequest user)
         {
+
+            if (user == null)
+                return BadRequest(new ErrorResponse()
+                {
+                    ErrorType = "EmptyUserAddRequest",
+                    Message = "A solicitação de adição de usuário não pode ser nula."
+                });
+
+
             try
             {
                 await _userService.AddUserAsync(user.ToUser());
@@ -175,6 +184,14 @@ namespace SmartCapital.WebAPI.Controllers
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> UpdateUser([FromRoute] string userName, [FromBody] UserUpdateRequest user)
         {
+            if (user == null)
+                return BadRequest(new ErrorResponse()
+                {
+                    ErrorType = "EmptyUserUpdateRequest",
+                    Message = "A solicitação de atualização de usuário não pode ser nula."
+                });
+
+
             User? updatedUser;
 
             var userNameFromToken = HttpContext.Items["User"] as string;
