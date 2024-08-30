@@ -46,7 +46,6 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
 
         public virtual async Task<TEntity?> GetByIDAsync(object ID)
         {
-            _entitySet.Include("Expenses,Incomes");
             return await _entitySet.FindAsync(ID);
         }
 
