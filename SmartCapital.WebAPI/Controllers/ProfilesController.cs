@@ -64,7 +64,7 @@ namespace SmartCapital.WebAPI.Controllers
         [HttpGet("{profileName}")]
         [ProducesResponseType(typeof(ProfileResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
-        public async Task<IActionResult> GetProfileByName(string profileName)
+        public async Task<IActionResult> GetProfileByName([FromRoute] string profileName)
         {
             var user = HttpContext.Items["User"] as string;
             var role = HttpContext.Items["Role"] as string;
@@ -108,8 +108,6 @@ namespace SmartCapital.WebAPI.Controllers
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profileAddRequest)
         {
             var name = HttpContext.Items["User"] as string;
-
-            var user = await _userService.GetUserByNameAsync(name!);
             
             if (profileAddRequest == null)
                 return BadRequest(new ErrorResponse()
@@ -139,7 +137,7 @@ namespace SmartCapital.WebAPI.Controllers
                 });
             }
 
-            return CreatedAtAction("GetProfileByName", new { profileName = profileAddRequest.ProfileName });
+            return CreatedAtRoute("", new { profileAddRequest.ProfileName });
         }
     }
 }
