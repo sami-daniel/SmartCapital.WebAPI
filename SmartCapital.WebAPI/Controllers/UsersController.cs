@@ -18,15 +18,15 @@ namespace SmartCapital.WebAPI.Controllers
     [Route("api/")]
     [ApiController]
     [Authorize]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
 
         /// <summary>
-        /// Inicializa uma nova instância de <see cref="UserController"/> com o serviço de usuários fornecido.
+        /// Inicializa uma nova instância de <see cref="UsersController"/> com o serviço de usuários fornecido.
         /// </summary>
         /// <param name="userService">Serviço para gerenciar operações de usuário.</param>
-        public UserController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
