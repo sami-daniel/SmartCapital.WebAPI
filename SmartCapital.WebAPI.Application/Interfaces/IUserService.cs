@@ -36,15 +36,11 @@ namespace SmartCapital.WebAPI.Application.Interfaces
         /// <summary>
         /// Obtém todos os usuários do sistema.
         /// </summary>
-        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os usuários.</returns>
-        public Task<IEnumerable<User>> GetAllUsersAsync();
-
-        /// <summary>
-        /// Obtém usuários que correspondem ao filtro fornecido.
-        /// </summary>
         /// <param name="filter">Uma expressão que define o critério de filtragem dos usuários.</param>
-        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de usuários que atendem ao critério de filtro.</returns>
-        public Task<IEnumerable<User>> GetFilteredUsersAsync(Expression<Func<User, bool>> filter);
+        /// <param name="includeProperties">Uma lista separada por vírgulas de propriedades de navegação a serem incluídas na consulta.</param>
+        /// <param name="orderBy">Uma função que define a ordenação dos usuários.</param>
+        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os usuários.</returns>
+        public Task<IEnumerable<User>> GetAllUsersAsync(Expression<Func<User, bool>>? filter = null, Func<IQueryable<User>, IOrderedQueryable<User>>? orderBy = null, string includeProperties = "");
 
         /// <summary>
         /// Obtém o usuário de acordo com o nome.
