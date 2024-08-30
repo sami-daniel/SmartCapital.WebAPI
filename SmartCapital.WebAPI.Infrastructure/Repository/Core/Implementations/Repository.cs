@@ -38,7 +38,7 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
                 query = query.Include(includeProperty);
             }
 
-            return orderBy != null ? await orderBy(query).ToListAsync() : (IEnumerable<TEntity>) await query.ToListAsync();
+            return orderBy != null ? await orderBy(query).ToListAsync() : (IEnumerable<TEntity>)await query.ToListAsync();
         }
 
         public virtual async Task InsertAsync(TEntity entity)
