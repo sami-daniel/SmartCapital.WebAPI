@@ -91,16 +91,6 @@ namespace SmartCapital.WebAPI.Application.Implementations
         }
 
         /// <summary>
-        /// Obtém perfis que correspondem ao filtro fornecido.
-        /// </summary>
-        /// <param name="filter">Uma expressão que define o critério de filtragem dos perfis.</param>
-        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de perfis que atendem ao critério de filtro.</returns>
-        public Task<IEnumerable<Profile>> GetFilteredProfilesAsync(Expression<Func<Profile, bool>> filter)
-        {
-            return _unitOfWork.ProfileRepository.GetAsync(filter: filter);
-        }
-
-        /// <summary>
         /// Obtém um perfil pelo nome.
         /// </summary>
         /// <param name="profileName">O nome do perfil a ser obtido.</param>
