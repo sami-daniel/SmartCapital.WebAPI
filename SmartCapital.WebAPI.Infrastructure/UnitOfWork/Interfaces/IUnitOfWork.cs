@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿// none
+
+using Microsoft.EntityFrameworkCore.Storage;
 using SmartCapital.WebAPI.Domain.Domain;
 using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 

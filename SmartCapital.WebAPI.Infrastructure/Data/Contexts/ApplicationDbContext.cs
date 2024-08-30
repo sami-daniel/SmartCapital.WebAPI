@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// none
+
+using Microsoft.EntityFrameworkCore;
 using SmartCapital.WebAPI.Domain.Domain;
 
 namespace SmartCapital.WebAPI.Infrastructure.Data.Contexts;

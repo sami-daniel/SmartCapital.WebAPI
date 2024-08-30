@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
+﻿// none
+
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
 
 namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
 {
@@ -30,33 +32,28 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
                 query = query.Where(filter);
             }
 
-            foreach (var includeProperty in includeProperties.Split
+            foreach (string includeProperty in includeProperties.Split
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 query = query.Include(includeProperty);
             }
 
-            if (orderBy != null)
-            {
-                return await orderBy(query).ToListAsync();
-            }
-
-            return await query.ToListAsync();
+            return orderBy != null ? await orderBy(query).ToListAsync() : (IEnumerable<TEntity>) await query.ToListAsync();
         }
-                
+
         public virtual async Task InsertAsync(TEntity entity)
         {
-            await _entitySet.AddAsync(entity);
+            _ = await _entitySet.AddAsync(entity);
         }
 
         public virtual void Update(TEntity entity)
         {
-            _entitySet.Update(entity);
+            _ = _entitySet.Update(entity);
         }
 
         public virtual void Delete(TEntity entity)
         {
-            _entitySet.Remove(entity);
+            _ = _entitySet.Remove(entity);
         }
 
         public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities)

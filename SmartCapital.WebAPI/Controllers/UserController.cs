@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// none
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;

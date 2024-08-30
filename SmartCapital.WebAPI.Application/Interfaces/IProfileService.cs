@@ -1,5 +1,7 @@
-﻿using SmartCapital.WebAPI.Domain.Domain;
+﻿// none
+
 using System.Linq.Expressions;
+using SmartCapital.WebAPI.Domain.Domain;
 
 namespace SmartCapital.WebAPI.Application.Interfaces
 {

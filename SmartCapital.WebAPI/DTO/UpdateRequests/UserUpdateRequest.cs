@@ -1,5 +1,7 @@
-﻿using SmartCapital.WebAPI.Domain.Domain;
+﻿// none
+
 using System.ComponentModel.DataAnnotations;
+using SmartCapital.WebAPI.Domain.Domain;
 
 namespace SmartCapital.WebAPI.DTO.UpdateRequests
 {

@@ -1,3 +1,7 @@
+// none
+
+using System.Reflection;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,8 +14,6 @@ using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Implementations;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
 using SmartCapital.WebAPI.Middlewares;
-using System.Reflection;
-using System.Text;
 
 namespace SmartCapital.WebAPI
 {

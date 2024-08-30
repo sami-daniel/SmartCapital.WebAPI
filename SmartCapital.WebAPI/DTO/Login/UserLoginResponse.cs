@@ -1,4 +1,6 @@
-﻿namespace SmartCapital.WebAPI.DTO.Login
+﻿// none
+
+namespace SmartCapital.WebAPI.DTO.Login
 {
     /// <summary>
     /// Representa a resposta de autenticação do usuário, contendo informações sobre o usuário autenticado e o token JWT gerado.

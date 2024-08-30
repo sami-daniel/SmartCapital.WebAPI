@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿// none
+
+using System.Linq.Expressions;
 
 namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces
 {

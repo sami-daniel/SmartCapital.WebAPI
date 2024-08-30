@@ -1,4 +1,6 @@
-﻿namespace SmartCapital.WebAPI.Domain.Domain;
+﻿// none
+
+namespace SmartCapital.WebAPI.Domain.Domain;
 
 public partial class Profile
 {

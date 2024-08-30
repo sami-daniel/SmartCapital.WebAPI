@@ -1,5 +1,7 @@
-﻿using SmartCapital.WebAPI.Application.Interfaces;
+﻿// none
+
 using System.IdentityModel.Tokens.Jwt;
+using SmartCapital.WebAPI.Application.Interfaces;
 
 namespace SmartCapital.WebAPI.Middlewares
 {

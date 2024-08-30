@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// none
+
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartCapital.WebAPI.Models
 {

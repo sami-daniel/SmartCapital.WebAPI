@@ -1,4 +1,6 @@
-﻿namespace SmartCapital.WebAPI.Application.Exceptions
+﻿// none
+
+namespace SmartCapital.WebAPI.Application.Exceptions
 {
     public class ExistingProfileException : Exception
     {

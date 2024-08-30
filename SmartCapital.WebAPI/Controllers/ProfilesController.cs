@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// none
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
@@ -108,7 +110,7 @@ namespace SmartCapital.WebAPI.Controllers
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profileAddRequest)
         {
             var name = HttpContext.Items["User"] as string;
-            
+
             if (profileAddRequest == null)
                 return BadRequest(new ErrorResponse()
                 {
