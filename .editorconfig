@@ -30,3 +30,7 @@ csharp_style_var_for_built_in_types = false
 csharp_style_var_elsewhere = false
 csharp_style_var_when_type_is_apparent = true
 file_header_template = none
+
+# Limitar o comprimento máximo da linha a 80 caracteres
+[*.cs]
+max_line_length = 80
