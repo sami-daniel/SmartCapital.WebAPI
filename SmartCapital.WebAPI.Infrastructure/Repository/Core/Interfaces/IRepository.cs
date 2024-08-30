@@ -21,13 +21,6 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces
             string includeProperties = "");
 
         /// <summary>
-        /// Obtém uma entidade específica pelo seu identificador.
-        /// </summary>
-        /// <param name="ID">O identificador da entidade a ser recuperada.</param>
-        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é a entidade com o identificador especificado ou <c>null</c> se não encontrada.</returns>
-        public Task<TEntity?> GetByIDAsync(object ID);
-
-        /// <summary>
         /// Insere uma nova entidade no repositório.
         /// </summary>
         /// <param name="entity">A entidade a ser inserida.</param>

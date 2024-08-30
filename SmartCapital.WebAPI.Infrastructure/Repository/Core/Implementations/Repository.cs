@@ -43,12 +43,7 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
 
             return await query.ToListAsync();
         }
-
-        public virtual async Task<TEntity?> GetByIDAsync(object ID)
-        {
-            return await _entitySet.FindAsync(ID);
-        }
-
+                
         public virtual async Task InsertAsync(TEntity entity)
         {
             await _entitySet.AddAsync(entity);
