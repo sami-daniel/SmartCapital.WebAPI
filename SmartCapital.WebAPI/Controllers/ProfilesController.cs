@@ -42,13 +42,6 @@ namespace SmartCapital.WebAPI.Controllers
             var user = HttpContext.Items["User"] as string;
             var role = HttpContext.Items["Role"] as string;
 
-            if (role == "Admin")
-            {
-                var profiles = await _profileService.GetAllProfilesAsync();
-
-                return Ok(profiles);
-            }
-
             var filteredProfiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == user);
 
             return Ok(filteredProfiles.Select(p => p.ToProfileResponse()));
@@ -68,20 +61,6 @@ namespace SmartCapital.WebAPI.Controllers
         {
             var user = HttpContext.Items["User"] as string;
             var role = HttpContext.Items["Role"] as string;
-
-            if (role == "Admin")
-            {
-                var profile = await _profileService.GetProfileByNameAsync(profileName);
-
-                if (profile == null)
-                    return NotFound(new ErrorResponse
-                    {
-                        ErrorType = "ProfileFindError",
-                        Message = "O perfil com o nome especificado não foi encontrado."
-                    });
-
-                return Ok(profile.ToProfileResponse());
-            }
 
             var filteredProfiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == user && p.ProfileName == profileName);
 

@@ -38,14 +38,10 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="200">Usuários encontrados com sucesso.</response>
         /// <response code="403">Não autorizado o acesso ao recurso.</response>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        [ProducesResponseType(403)]
         [ProducesResponseType(typeof(IEnumerable<UserResponse>), 200)]
-        public async Task<IActionResult> GetUsers()
+        public IActionResult GetUsers()
         {
-            var users = await _userService.GetAllUsersAsync();
-
-            return Ok(users.Select(u => u.ToUserResponse()));
+            return Forbid(); // FIXME: Esse endpoint só pode ser acessado pro administradores da API.
         }
 
         /// <summary>
@@ -71,7 +67,7 @@ namespace SmartCapital.WebAPI.Controllers
 
             if (user != null)
             {
-                if (role == "Admin" || userNameFromToken == userName)
+                if (userNameFromToken == userName)
                 {
                     return Ok(user.ToUserResponse());
                 }
@@ -150,7 +146,7 @@ namespace SmartCapital.WebAPI.Controllers
             var userNameFromToken = HttpContext.Items["User"] as string;
             var role = HttpContext.Items["Role"] as string;
 
-            if (userNameFromToken != userName && role != "Admin")
+            if (userNameFromToken != userName)
             {
                 return Forbid();
             }
