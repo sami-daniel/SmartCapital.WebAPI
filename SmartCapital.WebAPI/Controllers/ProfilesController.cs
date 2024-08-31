@@ -80,7 +80,7 @@ namespace SmartCapital.WebAPI.Controllers
                         Message = "O perfil com o nome especificado não foi encontrado."
                     });
 
-                return Ok(profile);
+                return Ok(profile.ToProfileResponse());
             }
 
             var filteredProfiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == user && p.ProfileName == profileName);

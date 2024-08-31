@@ -29,6 +29,11 @@ namespace SmartCapital.WebAPI.DTO.Responses
         /// Este campo é opcional e pode ser nulo.
         /// </remarks>
         public decimal? ProfileOpeningBalance { get; set; }
+
+        /// <summary>
+        /// Usuário associado ao perfil.
+        /// </summary>
+        public UserResponse User { get; set; } = null!;
     }
 
     /// <summary>
@@ -47,7 +52,8 @@ namespace SmartCapital.WebAPI.DTO.Responses
             {
                 ProfileCreationDate = profile.ProfileCreationDate,
                 ProfileOpeningBalance = profile.ProfileOpeningBalance,
-                ProfileName = profile.ProfileName
+                ProfileName = profile.ProfileName,
+                User = profile.UsersUser.ToUserResponse()
             };
         }
     }
