@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
+using SmartCapital.WebAPI.Domain.Domain;
 using SmartCapital.WebAPI.DTO.AddRequests;
 using SmartCapital.WebAPI.DTO.Responses;
 using SmartCapital.WebAPI.DTO.UpdateRequests;
@@ -119,7 +120,19 @@ namespace SmartCapital.WebAPI.Controllers
             return CreatedAtRoute("", new { profileAddRequest.ProfileName });
         }
 
+        /// <summary>
+        /// Atualiza um perfil existente com base no nome do perfil especificado.
+        /// </summary>
+        /// <param name="profileName">Nome do perfil a ser atualizado.</param>
+        /// <param name="profileUpdateRequest">Objeto contendo as informações atualizadas do perfil.</param>
+        /// <returns>Um resultado indicando o sucesso ou falha da operação.</returns>
+        /// <response code="204">Perfil atualizado com sucesso.</response>
+        /// <response code="400">Erro na solicitação de atualização de perfil.</response>
+        /// <response code="404">Não foi encontrado nenhum perfil com base no nome.</response>
         [HttpPut("{profileName}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
+        [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> UpdateProfile([FromRoute] string profileName, [FromBody] ProfileUpdateRequest profileUpdateRequest)
         {
             var name = HttpContext.Items["User"] as string;
@@ -131,13 +144,15 @@ namespace SmartCapital.WebAPI.Controllers
                     Message = "A solicitação de adição de perfil não pode ser nula."
                 });
 
+            Profile? op;
+
             try
             {
-                await _profileService.UpdateProfileAsync(profileName, profileUpdateRequest.ToProfile());
+                op = await _profileService.UpdateProfileAsync(profileName, profileUpdateRequest.ToProfile());
             }
             catch (ExistingProfileException e)
             {
-                return UnprocessableEntity(new ErrorResponse
+                return BadRequest(new ErrorResponse
                 {
                     ErrorType = "ProfileCreationError",
                     Message = $"Erro ao criar o Perfil: {e.Message}"
@@ -145,14 +160,23 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ArgumentException e)
             {
-                return UnprocessableEntity(new ErrorResponse
+                return BadRequest(new ErrorResponse
                 {
                     ErrorType = "ValidationError",
                     Message = $"Erro de validação: {e.Message}"
                 });
             }
 
-            return CreatedAtRoute("", new { profileUpdateRequest.ProfileName });
+            if (op == null)
+                return NotFound(new ErrorResponse
+                {
+                    ErrorType = "ProfileUpdateError",
+                    Message = "O perfil com o nome especificado não foi encontrado."
+                });
+
+            return NoContent();
         }
+
+
     }
 }
