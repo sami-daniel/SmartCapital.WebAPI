@@ -58,16 +58,21 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             profileToAdd.ProfileName = profileToAdd.ProfileName.Trim();
 
-            var user = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName);
+            var users = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName, includeProperties: "Profiles");
 
-            if (!user.Any())
+            var user = users.FirstOrDefault();
+
+            if (user == null)
                 throw new ArgumentException("O Usuário que está adicionando o Perfil não foi encontrado.");
+
+            if (user.Profiles.Any(p => p.ProfileName == profileToAdd.ProfileName))
+                throw new ExistingProfileException($"Um Perfil com o nome {profileToAdd.ProfileName} já existe.");
 
             using (var transaction = await _unitOfWork.StartTransactionAsync())
             {
                 try
                 {
-                    user.First().Profiles.Add(profileToAdd);
+                    user.Profiles.Add(profileToAdd);
                     await _unitOfWork.CompleteAsync();
                     await transaction.CommitAsync();
                 }
