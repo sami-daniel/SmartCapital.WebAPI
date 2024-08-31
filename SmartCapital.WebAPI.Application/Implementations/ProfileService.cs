@@ -65,8 +65,11 @@ namespace SmartCapital.WebAPI.Application.Implementations
             if (user == null)
                 throw new ArgumentException("O Usuário que está adicionando o Perfil não foi encontrado.");
 
-            if (user.Profiles.Any(p => p.ProfileName == profileToAdd.ProfileName))
-                throw new ExistingProfileException($"Um Perfil com o nome {profileToAdd.ProfileName} já existe.");
+            if (user.Profiles.Any(p => p.ProfileName == profileToAdd.ProfileName)) // FIXME: Essa verificação deveria também ser implementada no banco de dados
+                                                                                   // para maior consistencia e integridade. A unica coisa que proteje o usuário
+                                                                                   // de adicionar um perfil com o mesmo nome é a aplicação, o que não é suficiente
+                                                                                   // e inconsistente.
+                throw new ExistingProfileException($"Um Perfil com o nome {profileToAdd.ProfileName} já existe."); 
 
             using (var transaction = await _unitOfWork.StartTransactionAsync())
             {
