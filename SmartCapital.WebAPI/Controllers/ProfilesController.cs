@@ -6,6 +6,7 @@ using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.DTO.AddRequests;
 using SmartCapital.WebAPI.DTO.Responses;
+using SmartCapital.WebAPI.DTO.UpdateRequests;
 using SmartCapital.WebAPI.Models;
 
 namespace SmartCapital.WebAPI.Controllers
@@ -24,8 +25,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// Inicializa uma nova instância de <see cref="ProfilesController"/> com o serviço de perfis fornecido.
         /// </summary>
         /// <param name="profileService">Serviço para gerenciar operações de perfil.</param>
-        /// <param name="userService">Serviço para gerenciar operações de usuário.</param>
-        public ProfilesController(IProfileService profileService, IUserService userService)
+        public ProfilesController(IProfileService profileService)
         {
             _profileService = profileService;
         }
@@ -122,7 +122,7 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ExistingProfileException e)
             {
-                return BadRequest(new ErrorResponse
+                return UnprocessableEntity(new ErrorResponse
                 {
                     ErrorType = "ProfileCreationError",
                     Message = $"Erro ao criar o Perfil: {e.Message}"
@@ -130,7 +130,7 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ArgumentException e)
             {
-                return BadRequest(new ErrorResponse
+                return UnprocessableEntity(new ErrorResponse
                 {
                     ErrorType = "ValidationError",
                     Message = $"Erro de validação: {e.Message}"
@@ -138,6 +138,42 @@ namespace SmartCapital.WebAPI.Controllers
             }
 
             return CreatedAtRoute("", new { profileAddRequest.ProfileName });
+        }
+
+        [HttpPut("{profileName}")]
+        public async Task<IActionResult> UpdateProfile([FromRoute] string profileName, [FromBody] ProfileUpdateRequest profileUpdateRequest)
+        {
+            var name = HttpContext.Items["User"] as string;
+
+            if (profileUpdateRequest == null)
+                return BadRequest(new ErrorResponse()
+                {
+                    ErrorType = "EmptyProfileAddRequest",
+                    Message = "A solicitação de adição de perfil não pode ser nula."
+                });
+
+            try
+            {
+                await _profileService.UpdateProfileAsync(profileName, profileUpdateRequest.ToProfile());
+            }
+            catch (ExistingProfileException e)
+            {
+                return UnprocessableEntity(new ErrorResponse
+                {
+                    ErrorType = "ProfileCreationError",
+                    Message = $"Erro ao criar o Perfil: {e.Message}"
+                });
+            }
+            catch (ArgumentException e)
+            {
+                return UnprocessableEntity(new ErrorResponse
+                {
+                    ErrorType = "ValidationError",
+                    Message = $"Erro de validação: {e.Message}"
+                });
+            }
+
+            return CreatedAtRoute("", new { profileUpdateRequest.ProfileName });
         }
     }
 }
