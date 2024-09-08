@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SmartCapital.WebAPI.Application.Implementations;
 using SmartCapital.WebAPI.Application.Interfaces;
+using SmartCapital.WebAPI.AutoMapperProfiles;
 using SmartCapital.WebAPI.Infrastructure.Data.Contexts;
 using SmartCapital.WebAPI.Infrastructure.Repository.Implementations;
 using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
@@ -87,6 +88,11 @@ public class Program
 
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             opt.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+        });
+
+        builder.Services.AddAutoMapper(opt =>
+        {
+            opt.AddProfile<UserProfile>();
         });
 
         builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"] ?? throw new InvalidOperationException("A string de conexão não esta definida."), new MySqlServerVersion(new Version(8, 4, 0))));
