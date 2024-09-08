@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `Profiles` (
   CONSTRAINT `fk_Profiles_Users1`
     FOREIGN KEY (`Users_UserID`)
     REFERENCES `Users` (`UserID`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
