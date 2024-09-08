@@ -34,7 +34,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <summary>
         /// Obtém uma lista de todos os perfis existentes.
         /// </summary>
-        /// <returns>Uma lista de objetos <see cref="ProfileResponse"/> representado todos os perfis existente no sistem</returns>
+        /// <returns>Uma lista de objetos <see cref="ProfileResponse"/> representado todos os perfis do usuário.</returns>
         /// <response code="200">Perfis encontrados com sucesso.</response>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ProfileResponse>), 200)]
@@ -51,7 +51,7 @@ namespace SmartCapital.WebAPI.Controllers
         /// <summary>
         /// Obtém um perfil pelo nome especificado.
         /// </summary>
-        /// <param name="profileName">Nome do perfil a ser obtido.</param>
+        /// <param name="profileName">Nome do perfil do usuário a ser obtido.</param>
         /// <returns>O perfil correspondente ao nome especificado.</returns>
         /// <response code="200">Perfil encontrado com sucesso.</response>
         /// <response code="404">Perfil com o nome especificado não foi encontrado.</response>
@@ -81,10 +81,12 @@ namespace SmartCapital.WebAPI.Controllers
         /// <param name="profileAddRequest">Objeto contendo as informações do perfil a ser adicionado.</param>
         /// <returns>Um resultado indicando o sucesso ou falha da operação.</returns>
         /// <response code="201">Perfil criado com sucesso.</response>
-        /// <response code="400">Erro na solicitação de adição de perfil.</response>
+        /// <response code="400">Erro na solicitação de adição de perfil, o corpo da requisição é vazio.</response>
+        /// <response code="422">Erro na solicitação de adição de perfil, o tem erros de validação ou duplicidade.</response>
         [HttpPost]
         [ProducesResponseType(typeof(UserResponse), 201)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
+        [ProducesResponseType(typeof(ErrorResponse), 422)]
         public async Task<IActionResult> AddProfile([FromBody] ProfileAddRequest profileAddRequest)
         {
             var name = HttpContext.Items["User"] as string;
@@ -129,10 +131,12 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="204">Perfil atualizado com sucesso.</response>
         /// <response code="400">Erro na solicitação de atualização de perfil.</response>
         /// <response code="404">Não foi encontrado nenhum perfil com base no nome.</response>
+        /// <response code="422">Erro na solicitação de adição de perfil, o tem erros de validação ou duplicidade.</response>
         [HttpPut("{profileName}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
+        [ProducesResponseType(typeof(ErrorResponse), 422)]
         public async Task<IActionResult> UpdateProfile([FromRoute] string profileName, [FromBody] ProfileUpdateRequest profileUpdateRequest)
         {
             var name = HttpContext.Items["User"] as string;
@@ -152,7 +156,7 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ExistingProfileException e)
             {
-                return BadRequest(new ErrorResponse
+                return UnprocessableEntity(new ErrorResponse
                 {
                     ErrorType = "ProfileCreationError",
                     Message = $"Erro ao criar o Perfil: {e.Message}"
@@ -160,7 +164,7 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ArgumentException e)
             {
-                return BadRequest(new ErrorResponse
+                return UnprocessableEntity(new ErrorResponse
                 {
                     ErrorType = "ValidationError",
                     Message = $"Erro de validação: {e.Message}"

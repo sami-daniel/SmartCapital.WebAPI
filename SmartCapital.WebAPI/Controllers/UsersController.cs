@@ -74,11 +74,13 @@ namespace SmartCapital.WebAPI.Controllers
         /// <param name="user">Dados do usuário a ser criado.</param>
         /// <returns>O usuário recém-criado.</returns>
         /// <response code="201">Usuário criado com sucesso.</response>
-        /// <response code="400">Erro ao criar o usuário, devido a problemas de validação ou duplicidade.</response>s
+        /// <response code="400">Erro ao criar o usuário, o corpo da requisição está vazio.</response>
+        /// <response code="422">Erro ao criar o usuário, devido a problemas de validação ou duplicidade.</response>
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(typeof(UserResponse), 201)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
+        [ProducesResponseType(typeof(ErrorResponse), 422)]
         public async Task<IActionResult> AddUser([FromBody] UserAddRequest user)
         {
 
@@ -96,7 +98,7 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new ErrorResponse
+                return UnprocessableEntity(new ErrorResponse
                 {
                     ErrorType = "ValidationError",
                     Message = $"Erro de validação: {ex.Message}"
@@ -104,7 +106,7 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ExistingUserException ex)
             {
-                return BadRequest(new ErrorResponse
+                return UnprocessableEntity(new ErrorResponse
                 {
                     ErrorType = "UserCreationError",
                     Message = $"Erro ao criar o usuário: {ex.Message}"
@@ -158,14 +160,16 @@ namespace SmartCapital.WebAPI.Controllers
         /// <param name="user">Dados atualizados do usuário.</param>
         /// <returns>Status indicando o resultado da operação.</returns>
         /// <response code="204">Usuário atualizado com sucesso.</response>
-        /// <response code="400">Erro na atualização do usuário, devido a problemas de validação ou duplicidade.</response>
         /// <response code="403">Não autorizado o acesso ao recurso.</response>
         /// <response code="404">Usuário com o nome fornecido não encontrado.</response>
+        /// <response code="400">Erro ao criar o usuário, o corpo da requisição está vazio.</response>
+        /// <response code="422">Erro ao criar o usuário, devido a problemas de validação ou duplicidade.</response>
         [HttpPut("{userName}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
+        [ProducesResponseType(typeof(ErrorResponse), 422)]
         public async Task<IActionResult> UpdateUser([FromRoute] string userName, [FromBody] UserUpdateRequest user)
         {
             if (user == null)
@@ -192,7 +196,7 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new ErrorResponse
+                return UnprocessableEntity(new ErrorResponse
                 {
                     ErrorType = "ValidationError",
                     Message = $"Erro de validação: {ex.Message}"
@@ -200,7 +204,7 @@ namespace SmartCapital.WebAPI.Controllers
             }
             catch (ExistingUserException ex)
             {
-                return BadRequest(new ErrorResponse
+                return UnprocessableEntity(new ErrorResponse
                 {
                     ErrorType = "UserUpdateError",
                     Message = $"Erro ao atualizar o usuário: {ex.Message}"
