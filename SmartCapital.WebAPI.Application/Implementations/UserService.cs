@@ -150,6 +150,8 @@ namespace SmartCapital.WebAPI.Application.Implementations
                 }
             }
 
+            user.UserPassword = string.Empty;
+
             return user;
         }
     }
