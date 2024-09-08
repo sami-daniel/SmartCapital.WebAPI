@@ -86,7 +86,14 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             var users = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName);
 
-            return users.FirstOrDefault();
+            var user = users.FirstOrDefault();
+
+            if(user != null)
+            {
+                user.UserPassword = string.Empty;
+            }
+
+            return user;
         }
 
         /// <summary>
