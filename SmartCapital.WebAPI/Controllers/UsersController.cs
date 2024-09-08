@@ -32,19 +32,6 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Obtém uma lista de todos os usuários existentes.
-        /// </summary>
-        /// <returns>Uma lista de objetos <see cref="UserResponse"/> representando todos os usuários existentes no sistema.</returns>
-        /// <response code="200">Usuários encontrados com sucesso.</response>
-        /// <response code="403">Não autorizado o acesso ao recurso.</response>
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<UserResponse>), 200)]
-        public IActionResult GetUsers()
-        {
-            return Forbid(); // FIXME: Esse endpoint só pode ser acessado pro administradores da API.
-        }
-
-        /// <summary>
         /// Obtém o usuário correspondente ao nome fornecido.
         /// </summary>
         /// <param name="userName">Nome do usuário a ser recuperado.</param>
@@ -52,7 +39,6 @@ namespace SmartCapital.WebAPI.Controllers
         /// <response code="200">Usuário encontrado com sucesso.</response>
         /// <response code="404">Usuário com o nome fornecido não encontrado.</response>
         /// <response code="403">Não autorizado o acesso ao recurso.</response>
-
         [HttpGet("{userName}")]
         [ProducesResponseType(typeof(UserResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
@@ -71,6 +57,7 @@ namespace SmartCapital.WebAPI.Controllers
                 {
                     return Ok(user.ToUserResponse());
                 }
+
                 return Forbid();
             }
 
