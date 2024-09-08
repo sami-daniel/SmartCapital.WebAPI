@@ -37,7 +37,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
         /// <exception cref="ExistingProfileException">Lançada quando um perfil com o mesmo nome já existe.</exception>
         public async Task AddProfileAsync(Profile profileToAdd, string userName)
         {
-            ProfileValidationHelper.ValidateProfile(profileToAdd); 
+            ProfileValidationHelper.ValidateProfile(profileToAdd);
 
             profileToAdd.ProfileName = profileToAdd.ProfileName.Trim();
 
@@ -126,9 +126,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
         {
             ArgumentNullException.ThrowIfNullOrEmpty(profileName, nameof(profileName));
 
-            ArgumentNullException.ThrowIfNull(updatedProfile, nameof(updatedProfile));
-
-            ArgumentException.ThrowIfNullOrEmpty(updatedProfile.ProfileName, nameof(updatedProfile.ProfileName));
+            ProfileValidationHelper.ValidateProfile(updatedProfile);
 
             var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName == profileName);
 
@@ -140,7 +138,9 @@ namespace SmartCapital.WebAPI.Application.Implementations
             var profile = profiles.First();
 
             if (profile.ProfileName.Length > 255)
+            {
                 throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
+            }
 
             if (!Regex.Match(profile.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
             {
@@ -150,7 +150,9 @@ namespace SmartCapital.WebAPI.Application.Implementations
             if (profile.ProfileOpeningBalance != null)
             {
                 if (profile.ProfileOpeningBalance > 999_999_999.99m)
+                {
                     throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
+                }
             }
 
             updatedProfile.ProfileName = updatedProfile.ProfileName.Trim();
