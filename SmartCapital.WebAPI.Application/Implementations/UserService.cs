@@ -64,7 +64,14 @@ namespace SmartCapital.WebAPI.Application.Implementations
         /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os usuários.</returns>
         public async Task<IEnumerable<User>> GetAllUsersAsync(Expression<Func<User, bool>>? filter = null, Func<IQueryable<User>, IOrderedQueryable<User>>? orderBy = null, string includeProperties = "")
         {
-            return await _unitOfWork.UserRepository.GetAsync(filter, orderBy, includeProperties);
+            var users = await _unitOfWork.UserRepository.GetAsync(filter, orderBy, includeProperties);
+
+            foreach (var user in users)
+            {
+                user.UserPassword = string.Empty;
+            }
+
+            return users;
         }
 
         /// <summary>
