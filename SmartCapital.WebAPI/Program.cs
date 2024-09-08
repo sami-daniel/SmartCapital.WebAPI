@@ -1,4 +1,4 @@
-// none
+Ôªø// none
 
 using System.Reflection;
 using System.Text;
@@ -14,6 +14,7 @@ using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Implementations;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
 using SmartCapital.WebAPI.Middlewares;
+using SmartCapital.WebAPI.OperationFilters;
 
 namespace SmartCapital.WebAPI
 {
@@ -32,7 +33,7 @@ namespace SmartCapital.WebAPI
             })
                 .AddJwtBearer(opt =>
                 {
-                    var key = Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:Secret"] ?? throw new InvalidOperationException("O token do JWT (secret) n„o est· definido."));
+                    var key = Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:Secret"] ?? throw new InvalidOperationException("O token do JWT (secret) n√£o est√° definido."));
                     opt.RequireHttpsMetadata = true;
                     opt.SaveToken = true;
                     opt.TokenValidationParameters = new TokenValidationParameters
@@ -81,11 +82,14 @@ namespace SmartCapital.WebAPI
                         Array.Empty<string>()
                     }
                 });
+
+                opt.OperationFilter<UnathorizedStatusCodeOperationFilter>();
+
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 opt.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
-            builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"] ?? throw new InvalidOperationException("A string de conex„o n„o esta definida."), new MySqlServerVersion(new Version(8, 4, 0))));
+            builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"] ?? throw new InvalidOperationException("A string de conex√£o n√£o esta definida."), new MySqlServerVersion(new Version(8, 4, 0))));
 
             builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
