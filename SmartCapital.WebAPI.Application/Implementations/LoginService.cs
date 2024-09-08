@@ -29,7 +29,14 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             var users = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName);
 
-            return users.FirstOrDefault(u => u.UserName == userName && BCrypt.Net.BCrypt.Verify(pwd, u.UserPassword));
+            var user = users.FirstOrDefault(u => u.UserName == userName && BCrypt.Net.BCrypt.Verify(pwd, u.UserPassword));
+
+            if (user != null)
+            {
+                user.UserPassword = string.Empty; // Não expor a senha do usuário.
+            }
+
+            return user;
         }
     }
 }
