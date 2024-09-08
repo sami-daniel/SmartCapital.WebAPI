@@ -91,9 +91,12 @@ public class Program
 
         builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"] ?? throw new InvalidOperationException("A string de conexão não esta definida."), new MySqlServerVersion(new Version(8, 4, 0))));
 
+        // Repostories and UnitOfWork
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Services
         builder.Services.AddScoped<IProfileService, ProfileService>();
         builder.Services.AddScoped<ILoginService, LoginService>();
         builder.Services.AddScoped<IUserService, UserService>();
