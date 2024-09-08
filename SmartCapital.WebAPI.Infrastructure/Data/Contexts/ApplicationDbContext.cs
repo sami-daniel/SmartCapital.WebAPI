@@ -77,6 +77,7 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Profile).WithMany(p => p.Expenses)
                 .HasPrincipalKey(p => p.ProfileId)
                 .HasForeignKey(d => d.ProfileId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_Expenses_Profiles");
         });
 
@@ -110,6 +111,7 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Profile).WithMany(p => p.Incomes)
                 .HasPrincipalKey(p => p.ProfileId)
                 .HasForeignKey(d => d.ProfileId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_Incomes_Profiles");
         });
 
@@ -135,7 +137,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.UsersUser).WithMany(p => p.Profiles)
                 .HasForeignKey(d => d.UsersUserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_Profiles_Users1");
         });
 
