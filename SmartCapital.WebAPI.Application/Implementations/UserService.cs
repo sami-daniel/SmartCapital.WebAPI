@@ -1,9 +1,10 @@
-// none
+Ôªø// none
 
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using SmartCapital.WebAPI.Application.Exceptions;
+using SmartCapital.WebAPI.Application.Helpers;
 using SmartCapital.WebAPI.Application.Interfaces;
 using SmartCapital.WebAPI.Domain.Domain;
 using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
@@ -11,45 +12,33 @@ using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
 namespace SmartCapital.WebAPI.Application.Implementations
 {
     /// <summary>
-    /// Fornece a implementaÁ„o dos serviÁos relacionados a usu·rios, incluindo operaÁıes CRUD e filtragem.
+    /// Fornece a implementa√ß√£o dos servi√ßos relacionados a usu√°rios, incluindo opera√ß√µes CRUD e filtragem.
     /// </summary>
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Inicializa uma nova inst‚ncia da classe <see cref="UserService"/> com a unidade de trabalho fornecida.
+        /// Inicializa uma nova inst√¢ncia da classe <see cref="UserService"/> com a unidade de trabalho fornecida.
         /// </summary>
-        /// <param name="unitOfWork">A unidade de trabalho usada para gerenciar operaÁıes de repositÛrio e transaÁıes.</param>
+        /// <param name="unitOfWork">A unidade de trabalho usada para gerenciar opera√ß√µes de reposit√≥rio e transa√ß√µes.</param>
         public UserService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         /// <summary>
-        /// Adiciona um novo usu·rio ao sistema.
+        /// Adiciona um novo usu√°rio ao sistema.
         /// </summary>
-        /// <param name="userToAdd">O usu·rio a ser adicionado.</param>
-        /// <returns>Uma tarefa que representa a operaÁ„o assÌncrona.</returns>
-        /// <exception cref="ArgumentNullException">LanÁada quando o usu·rio a ser adicionado È nulo.</exception>
-        /// <exception cref="ArgumentException">LanÁada quando o nome de usu·rio ou senha È inv·lido.</exception>
-        /// <exception cref="ExistingUserException">LanÁada quando um usu·rio com o mesmo nome j· existe.</exception>
+        /// <param name="userToAdd">O usu√°rio a ser adicionado.</param>
+        /// <returns>Uma tarefa que representa a opera√ß√£o ass√≠ncrona.</returns>
+        /// <exception cref="ExistingUserException">Lan√ßada quando um usu√°rio com o mesmo nome j√° existe.</exception>
         public async Task AddUserAsync(User userToAdd)
         {
-            ArgumentNullException.ThrowIfNull(userToAdd, nameof(userToAdd));
-
-            ArgumentException.ThrowIfNullOrEmpty(userToAdd.UserName, nameof(userToAdd.UserName));
-            ArgumentException.ThrowIfNullOrEmpty(userToAdd.UserPassword, nameof(userToAdd.UserPassword));
-
-            if (userToAdd.UserName.Length > 255)
-                throw new ArgumentException("O tamanho do nome de usu·rio n„o pode exceder 255 caracteres.");
-
-            if (!Regex.Match(userToAdd.UserName, "^[a-zA-Z0-9 ]*$").Success)
-            {
-                throw new ArgumentException("O nome de usu·rio pode conter apenas letras, n˙meros e espaÁos.");
-            }
+            UserValidationHelper.ValidateUser(userToAdd);
 
             userToAdd.UserName = userToAdd.UserName.Trim();
+            userToAdd.UserPassword = userToAdd.UserPassword.Trim();
 
             userToAdd.UserPassword = BCrypt.Net.BCrypt.HashPassword(userToAdd.UserPassword);
 
@@ -64,26 +53,26 @@ namespace SmartCapital.WebAPI.Application.Implementations
                 catch (DbUpdateException)
                 {
                     await transaction.RollbackAsync();
-                    throw new ExistingUserException($"Um usu·rio com o nome {userToAdd.UserName} j· existe.");
+                    throw new ExistingUserException($"Um usu√°rio com o nome {userToAdd.UserName} j√° existe.");
                 }
             }
         }
 
         /// <summary>
-        /// ObtÈm todos os usu·rios do sistema.
+        /// Obt√©m todos os usu√°rios do sistema.
         /// </summary>
-        /// <returns>Uma tarefa que representa a operaÁ„o assÌncrona. O resultado È uma coleÁ„o de todos os usu·rios.</returns>
+        /// <returns>Uma tarefa que representa a opera√ß√£o ass√≠ncrona. O resultado √© uma cole√ß√£o de todos os usu√°rios.</returns>
         public async Task<IEnumerable<User>> GetAllUsersAsync(Expression<Func<User, bool>>? filter = null, Func<IQueryable<User>, IOrderedQueryable<User>>? orderBy = null, string includeProperties = "")
         {
             return await _unitOfWork.UserRepository.GetAsync(filter, orderBy, includeProperties);
         }
 
         /// <summary>
-        /// ObtÈm um usu·rio pelo nome.
+        /// Obt√©m um usu√°rio pelo nome.
         /// </summary>
-        /// <param name="userName">O nome do usu·rio a ser obtido.</param>
-        /// <returns>Uma tarefa que representa a operaÁ„o assÌncrona. O resultado È o usu·rio com o nome especificado, ou nulo se nenhum usu·rio for encontrado.</returns>
-        /// <exception cref="ArgumentException">LanÁada quando o nome do usu·rio È nulo ou vazio.</exception>
+        /// <param name="userName">O nome do usu√°rio a ser obtido.</param>
+        /// <returns>Uma tarefa que representa a opera√ß√£o ass√≠ncrona. O resultado √© o usu√°rio com o nome especificado, ou nulo se nenhum usu√°rio for encontrado.</returns>
+        /// <exception cref="ArgumentException">Lan√ßada quando o nome do usu√°rio √© nulo ou vazio.</exception>
         public async Task<User?> GetUserByNameAsync(string userName)
         {
             ArgumentException.ThrowIfNullOrEmpty(userName, nameof(userName));
@@ -94,27 +83,27 @@ namespace SmartCapital.WebAPI.Application.Implementations
         }
 
         /// <summary>
-        /// Remove um usu·rio existente do sistema.
+        /// Remove um usu√°rio existente do sistema.
         /// </summary>
-        /// <param name="userToRemove">O usu·rio a ser removido.</param>
-        /// <returns>Uma tarefa que representa a operaÁ„o assÌncrona.</returns>
-        /// <exception cref="ArgumentNullException">LanÁada quando o usu·rio a ser removido È nulo.</exception>
+        /// <param name="userToRemove">O usu√°rio a ser removido.</param>
+        /// <returns>Uma tarefa que representa a opera√ß√£o ass√≠ncrona.</returns>
+        /// <exception cref="ArgumentNullException">Lan√ßada quando o usu√°rio a ser removido √© nulo.</exception>
         public async Task RemoveUserAsync(User userToRemove)
         {
-            ArgumentNullException.ThrowIfNull(userToRemove, "O usu·rio a ser removido n„o pode ser nulo.");
+            ArgumentNullException.ThrowIfNull(userToRemove, "O usu√°rio a ser removido n√£o pode ser nulo.");
 
             _unitOfWork.UserRepository.Delete(userToRemove);
             await _unitOfWork.CompleteAsync();
         }
 
         /// <summary>
-        /// Atualiza um usu·rio existente no sistema.
+        /// Atualiza um usu√°rio existente no sistema.
         /// </summary>
-        /// <param name="userName">O nome do usu·rio a ser atualizado.</param>
-        /// <param name="updatedUser">O objeto usu·rio atualizado.</param>
-        /// <returns>Uma tarefa que representa a operaÁ„o assÌncrona. O resultado È o objeto usu·rio atualizado, ou nulo se o usu·rio n„o for encontrado.</returns>
-        /// <exception cref="ArgumentException">LanÁada quando o nome do usu·rio ou o usu·rio atualizado È nulo ou inv·lido.</exception>
-        /// <exception cref="ExistingUserException">LanÁada quando um usu·rio com o mesmo nome j· existe.</exception>
+        /// <param name="userName">O nome do usu√°rio a ser atualizado.</param>
+        /// <param name="updatedUser">O objeto usu√°rio atualizado.</param>
+        /// <returns>Uma tarefa que representa a opera√ß√£o ass√≠ncrona. O resultado √© o objeto usu√°rio atualizado, ou nulo se o usu√°rio n√£o for encontrado.</returns>
+        /// <exception cref="ArgumentException">Lan√ßada quando o nome do usu√°rio ou o usu√°rio atualizado √© nulo ou inv√°lido.</exception>
+        /// <exception cref="ExistingUserException">Lan√ßada quando um usu√°rio com o mesmo nome j√° existe.</exception>
         public async Task<User?> UpdateUserAsync(string userName, User updatedUser)
         {
             ArgumentException.ThrowIfNullOrEmpty(userName, nameof(userName));
@@ -130,11 +119,11 @@ namespace SmartCapital.WebAPI.Application.Implementations
             var user = users.First();
 
             if (updatedUser.UserName.Length > 255)
-                throw new ArgumentException("O tamanho do nome de usu·rio n„o pode exceder 255 caracteres.");
+                throw new ArgumentException("O tamanho do nome de usu√°rio n√£o pode exceder 255 caracteres.");
 
             if (!Regex.Match(updatedUser.UserName, "^[a-zA-Z0-9 ]*$").Success)
             {
-                throw new ArgumentException("O nome de usu·rio pode conter apenas letras, n˙meros e espaÁos.");
+                throw new ArgumentException("O nome de usu√°rio pode conter apenas letras, n√∫meros e espa√ßos.");
             }
 
             updatedUser.UserName = updatedUser.UserName.Trim();
@@ -154,7 +143,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
                 catch (DbUpdateException)
                 {
                     await transaction.RollbackAsync();
-                    throw new ExistingUserException($"Um usu·rio com o nome {user.UserName} j· existe.");
+                    throw new ExistingUserException($"Um usu√°rio com o nome {user.UserName} j√° existe.");
                 }
             }
 
