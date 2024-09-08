@@ -2,25 +2,24 @@
 
 using SmartCapital.WebAPI.Domain.Domain;
 
-namespace SmartCapital.WebAPI.DTO.Responses
-{
-    public class UserResponse
-    {
-        public string UserName { get; set; } = null!;
-        public DateTime UserCreationDate { get; set; }
-        public virtual ICollection<ProfileResponse> Profiles { get; set; } = new List<ProfileResponse>();
-    }
+namespace SmartCapital.WebAPI.DTO.Responses;
 
-    public static class UserResponseExtensions
+public class UserResponse
+{
+    public string UserName { get; set; } = null!;
+    public DateTime UserCreationDate { get; set; }
+    public virtual ICollection<ProfileResponse> Profiles { get; set; } = [];
+}
+
+public static class UserResponseExtensions
+{
+    public static UserResponse ToUserResponse(this User user)
     {
-        public static UserResponse ToUserResponse(this User user)
+        return new UserResponse
         {
-            return new UserResponse
-            {
-                UserName = user.UserName,
-                UserCreationDate = user.UserCreationDate,
-                Profiles = user.Profiles.Select(p => p.ToProfileResponse()).ToList()
-            };
-        }
+            UserName = user.UserName,
+            UserCreationDate = user.UserCreationDate,
+            Profiles = user.Profiles.Select(p => p.ToProfileResponse()).ToList()
+        };
     }
 }

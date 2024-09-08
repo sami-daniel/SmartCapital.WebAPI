@@ -1,7 +1,6 @@
 ﻿// none
 
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Helpers;
@@ -88,7 +87,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             var user = users.FirstOrDefault();
 
-            if(user != null)
+            if (user != null)
             {
                 user.UserPassword = string.Empty;
             }
