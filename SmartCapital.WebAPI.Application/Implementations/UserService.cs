@@ -72,10 +72,10 @@ namespace SmartCapital.WebAPI.Application.Implementations
         /// </summary>
         /// <param name="userName">O nome do usuário a ser obtido.</param>
         /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o usuário com o nome especificado, ou nulo se nenhum usuário for encontrado.</returns>
-        /// <exception cref="ArgumentException">Lançada quando o nome do usuário é nulo ou vazio.</exception>
+        /// <exception cref="ArgumentNullException">Lançada quando o nome do usuário é nulo ou vazio.</exception>
         public async Task<User?> GetUserByNameAsync(string userName)
         {
-            ArgumentException.ThrowIfNullOrEmpty(userName, nameof(userName));
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
 
             var users = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName);
 
@@ -102,12 +102,10 @@ namespace SmartCapital.WebAPI.Application.Implementations
         /// <param name="userName">O nome do usuário a ser atualizado.</param>
         /// <param name="updatedUser">O objeto usuário atualizado.</param>
         /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o objeto usuário atualizado, ou nulo se o usuário não for encontrado.</returns>
-        /// <exception cref="ArgumentException">Lançada quando o nome do usuário ou o usuário atualizado é nulo ou inválido.</exception>
         /// <exception cref="ExistingUserException">Lançada quando um usuário com o mesmo nome já existe.</exception>
         public async Task<User?> UpdateUserAsync(string userName, User updatedUser)
         {
-            ArgumentException.ThrowIfNullOrEmpty(userName, nameof(userName));
-            ArgumentNullException.ThrowIfNull(updatedUser, nameof(updatedUser));
+            UserValidationHelper.ValidateUser(updatedUser);
 
             var users = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName);
 
@@ -118,16 +116,7 @@ namespace SmartCapital.WebAPI.Application.Implementations
 
             var user = users.First();
 
-            if (updatedUser.UserName.Length > 255)
-                throw new ArgumentException("O tamanho do nome de usuário não pode exceder 255 caracteres.");
-
-            if (!Regex.Match(updatedUser.UserName, "^[a-zA-Z0-9 ]*$").Success)
-            {
-                throw new ArgumentException("O nome de usuário pode conter apenas letras, números e espaços.");
-            }
-
             updatedUser.UserName = updatedUser.UserName.Trim();
-
             updatedUser.UserPassword = BCrypt.Net.BCrypt.HashPassword(updatedUser.UserPassword);
 
             user.UserName = updatedUser.UserName;
