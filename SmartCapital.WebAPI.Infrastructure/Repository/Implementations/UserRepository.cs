@@ -15,8 +15,9 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Implementations
         /// <summary>
         /// Inicializa uma nova instância da classe <see cref="UserRepository"/> com o contexto de banco de dados fornecido.
         /// </summary>
+        /// <param name="dapperContext">O contexto Dapper (<see cref="DapperContext"/> para acessar a fonte de dados.</param>
         /// <param name="applicationDbContext">O contexto de banco de dados usado para acessar a fonte de dados.</param>
-        public UserRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
+        public UserRepository(ApplicationDbContext applicationDbContext, DapperContext dapperContext) : base(applicationDbContext, dapperContext)
         {
         }
     }

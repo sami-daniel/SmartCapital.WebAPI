@@ -2,6 +2,7 @@
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using SmartCapital.WebAPI.Infrastructure.Data.Contexts;
 using SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
 
 namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
@@ -13,14 +14,17 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly DbSet<TEntity> _entitySet;
+        private readonly DapperContext _dapperContext;
 
         /// <summary>
         /// Inicializa uma nova instância da classe <see cref="Repository{TEntity}"/> com o contexto de banco de dados fornecido.
         /// </summary>
-        /// <param name="context">O contexto de banco de dados usado para acessar a fonte de dados.</param>\
-        protected Repository(DbContext context)
+        /// <param name="context">O contexto de banco de dados usado para acessar a fonte de dados.</param>
+        /// <param name="dapperContext">O contexto Dapper (<see cref="DapperContext"/>) para acessar a fonte de dados.</param>
+        protected Repository(DbContext context, DapperContext dapperContext)
         {
             _entitySet = context.Set<TEntity>();
+            _dapperContext = dapperContext;
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, string includeProperties = "")
