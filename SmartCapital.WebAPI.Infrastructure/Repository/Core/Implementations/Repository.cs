@@ -23,7 +23,10 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         _entitySet = context.Set<TEntity>();
     }
 
-    public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, string includeProperties = "")
+    public virtual async Task<IEnumerable<TEntity>> GetAsync(
+    Expression<Func<TEntity, bool>>? filter = null,
+    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+    string includeProperties = "")
     {
         IQueryable<TEntity> query = _entitySet;
 
@@ -32,14 +35,17 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
             query = query.Where(filter);
         }
 
-        foreach (string includeProperty in includeProperties.Split
-            (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        if (!string.IsNullOrWhiteSpace(includeProperties))
         {
-            query = query.Include(includeProperty);
+            foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
         }
 
-        return orderBy != null ? await orderBy(query).ToListAsync() : (IEnumerable<TEntity>)await query.ToListAsync();
+        return orderBy != null ? await orderBy(query).ToListAsync() : await query.ToListAsync();
     }
+
 
     public virtual async Task InsertAsync(TEntity entity)
     {

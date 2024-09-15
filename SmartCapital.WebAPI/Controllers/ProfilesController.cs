@@ -1,6 +1,4 @@
-﻿// none
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
@@ -41,7 +39,15 @@ public class ProfilesController : ControllerBase
     public async Task<IActionResult> GetProfiles()
     {
         var user = HttpContext.Items["User"] as string;
-        var role = HttpContext.Items["Role"] as string;
+
+        if (string.IsNullOrEmpty(user))
+        {
+            return BadRequest(new ErrorResponse
+            {
+                ErrorType = "UserNotFound",
+                Message = "Usuário não encontrado no contexto da solicitação."
+            });
+        }
 
         var filteredProfiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == user);
 
@@ -61,18 +67,29 @@ public class ProfilesController : ControllerBase
     public async Task<IActionResult> GetProfileByName([FromRoute] string profileName)
     {
         var user = HttpContext.Items["User"] as string;
-        var role = HttpContext.Items["Role"] as string;
+
+        if (string.IsNullOrEmpty(user))
+        {
+            return BadRequest(new ErrorResponse
+            {
+                ErrorType = "UserNotFound",
+                Message = "Usuário não encontrado no contexto da solicitação."
+            });
+        }
 
         var filteredProfiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == user && p.ProfileName == profileName);
 
-        if (!filteredProfiles.Any())
+        var profile = filteredProfiles.FirstOrDefault();
+        if (profile == null)
+        {
             return NotFound(new ErrorResponse
             {
                 ErrorType = "ProfileFindError",
                 Message = "O perfil com o nome especificado não foi encontrado."
             });
+        }
 
-        return Ok(filteredProfiles.First());
+        return Ok(profile.ToProfileResponse());
     }
 
     /// <summary>
@@ -92,15 +109,26 @@ public class ProfilesController : ControllerBase
         var name = HttpContext.Items["User"] as string;
 
         if (profileAddRequest == null)
-            return BadRequest(new ErrorResponse()
+        {
+            return BadRequest(new ErrorResponse
             {
                 ErrorType = "EmptyProfileAddRequest",
                 Message = "A solicitação de adição de perfil não pode ser nula."
             });
+        }
+
+        if (string.IsNullOrEmpty(name))
+        {
+            return BadRequest(new ErrorResponse
+            {
+                ErrorType = "UserNotFound",
+                Message = "Usuário não encontrado no contexto da solicitação."
+            });
+        }
 
         try
         {
-            await _profileService.AddProfileAsync(profileAddRequest.ToProfile(), name!);
+            await _profileService.AddProfileAsync(profileAddRequest.ToProfile(), name);
         }
         catch (ExistingProfileException e)
         {
@@ -140,17 +168,19 @@ public class ProfilesController : ControllerBase
     public async Task<IActionResult> UpdateProfile([FromRoute] string profileName, [FromBody] ProfileUpdateRequest profileUpdateRequest)
     {
         if (profileUpdateRequest == null)
-            return BadRequest(new ErrorResponse()
+        {
+            return BadRequest(new ErrorResponse
             {
                 ErrorType = "EmptyProfileAddRequest",
                 Message = "A solicitação de adição de perfil não pode ser nula."
             });
+        }
 
-        Profile? op;
+        Profile? updatedProfile;
 
         try
         {
-            op = await _profileService.UpdateProfileAsync(profileName, profileUpdateRequest.ToProfile());
+            updatedProfile = await _profileService.UpdateProfileAsync(profileName, profileUpdateRequest.ToProfile());
         }
         catch (ExistingProfileException e)
         {
@@ -169,15 +199,15 @@ public class ProfilesController : ControllerBase
             });
         }
 
-        if (op == null)
+        if (updatedProfile == null)
+        {
             return NotFound(new ErrorResponse
             {
                 ErrorType = "ProfileUpdateError",
                 Message = "O perfil com o nome especificado não foi encontrado."
             });
+        }
 
         return NoContent();
     }
-
-
 }
