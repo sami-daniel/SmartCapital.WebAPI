@@ -82,21 +82,6 @@ public class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Obtém um perfil pelo nome.
-    /// </summary>
-    /// <param name="profileName">O nome do perfil a ser obtido.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o perfil com o nome especificado, ou nulo se nenhum perfil for encontrado.</returns>
-    /// <exception cref="ArgumentException">Lançada quando o nome do perfil é nulo ou vazio.</exception>
-    public async Task<Profile?> GetProfileByNameAsync(string profileName)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(profileName, nameof(profileName));
-
-        var profiles = await _unitOfWork.ProfileRepository.GetAsync(p => p.ProfileName == profileName);
-
-        return profiles.FirstOrDefault();
-    }
-
-    /// <summary>
     /// Remove um perfil existente do sistema.
     /// </summary>
     /// <param name="profileToRemove">O perfil a ser removido.</param>

@@ -43,12 +43,4 @@ public interface IProfileService
     public Task<IEnumerable<Profile>> GetAllProfilesAsync(Expression<Func<Profile, bool>>? filter = null,
                                                                 Func<IQueryable<Profile>, IOrderedQueryable<Profile>>? orderBy = null,
                                                                 string includeProperties = "");
-
-    /// <summary>
-    /// Obtém o perfil de acordo com o nome.
-    /// </summary>
-    /// <param name="profileName">O nome do perfil do usuário a ser obtido.</param>
-    /// <returns>O perfil correspondente ao nome fornecido.</returns>
-    /// <remarks>Se não for encontrado nenhum perfil, é retornado <c>null</c>.</remarks>
-    public Task<Profile?> GetProfileByNameAsync(string profileName);
 }
