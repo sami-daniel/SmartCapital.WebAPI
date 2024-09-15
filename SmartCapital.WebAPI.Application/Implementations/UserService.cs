@@ -61,9 +61,10 @@ namespace SmartCapital.WebAPI.Application.Implementations
         /// Obtém todos os usuários do sistema.
         /// </summary>
         /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os usuários.</returns>
+        /// <remarks>Essa API não pode ser utilizada para modificar ou deletar nenhuma instância de <see cref="User"/>. Utilize <see cref="GetUserByNameAsync(string)"/> para alterar ou deletar instância em vez disso.</remarks>
         public async Task<IEnumerable<User>> GetAllUsersAsync(Expression<Func<User, bool>>? filter = null, Func<IQueryable<User>, IOrderedQueryable<User>>? orderBy = null, string includeProperties = "")
         {
-            var users = await _unitOfWork.UserRepository.GetAsync(filter, orderBy, includeProperties);
+            var users = await _unitOfWork.UserRepository.GetAsync(filter, orderBy, includeProperties, nonTrackableEntities: true);
 
             foreach (var user in users)
             {
