@@ -216,11 +216,10 @@ public class ProfilesController : ControllerBase
     /// </summary>
     /// <param name="profileName">O nome do perfil a ser removido.</param>
     /// <response code="404">O perfil com o nome especificado não foi encontrado.</response>
-    /// <response code="204">O perfil foi removido com sucesso</response>
+    /// <response code="204">O perfil foi removido com sucesso.</response>
+    [HttpDelete("{profileName}")]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
     [ProducesResponseType(204)]
-
-    [HttpDelete("{profileName}")]
     public async Task<IActionResult> DeleteProfile([FromRoute] string profileName)
     {
         var name = HttpContext.Items["User"] as string;
