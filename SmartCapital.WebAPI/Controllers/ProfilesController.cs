@@ -210,4 +210,25 @@ public class ProfilesController : ControllerBase
 
         return NoContent();
     }
+
+    public async Task<IActionResult> DeleteProfile([FromRoute] string profileName)
+    {
+        var name = HttpContext.Items["User"] as string;
+
+        var profiles = await _profileService.GetAllProfilesAsync(p => p.UsersUser.UserName == name && p.ProfileName == profileName);
+        var profile = profiles.FirstOrDefault();
+
+        if (profile == null)
+        {
+            return NotFound(new ErrorResponse
+            {
+                ErrorType = "ProfileNotFound",
+                Message = "O perfil com o nome fornecido não foi encontrado."
+            });
+        }
+
+        await _profileService.RemoveProfileAsync(profile);
+
+        return NoContent();
+    }
 }
