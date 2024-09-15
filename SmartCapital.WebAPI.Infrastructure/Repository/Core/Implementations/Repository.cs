@@ -23,72 +23,52 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         _entitySet = context.Set<TEntity>();
     }
 
-    public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, string includeProperties = "", bool nonTrackableEntities = false)
-    {
-        IQueryable<TEntity> query = _entitySet;
-
-        if (filter != null)
+        public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, string includeProperties = "")
         {
-            query = query.Where(filter);
+            IQueryable<TEntity> query = _entitySet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            foreach (string includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return orderBy != null ? await orderBy(query).ToListAsync() : (IEnumerable<TEntity>)await query.ToListAsync();
         }
 
-        foreach (string includeProperty in includeProperties.Split
-            (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        public virtual async Task InsertAsync(TEntity entity)
         {
-            query = query.Include(includeProperty);
+            _ = await _entitySet.AddAsync(entity);
         }
 
-        if (orderBy == null)
+        public virtual void Update(TEntity entity)
         {
-            if (nonTrackableEntities)
-            {
-                return await query.AsNoTracking().ToListAsync();
-            }
-            else
-            {
-                return await query.ToListAsync();
-            }
+            _ = _entitySet.Update(entity);
         }
-        else
+
+        public virtual void Delete(TEntity entity)
         {
-            if (nonTrackableEntities)
-            {
-                return await orderBy(query).AsNoTracking().ToListAsync();
-            }
-            else
-            {
-                return await orderBy(query).ToListAsync();
-            }
+            _ = _entitySet.Remove(entity);
         }
-    }
 
-    public virtual async Task InsertAsync(TEntity entity)
-    {
-        _ = await _entitySet.AddAsync(entity);
-    }
+        public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities)
+        {
+            await _entitySet.AddRangeAsync(entities);
+        }
 
-    public virtual void Update(TEntity entity)
-    {
-        _ = _entitySet.Update(entity);
-    }
+        public virtual void UpdateRange(IEnumerable<TEntity> entities)
+        {
+            _entitySet.UpdateRange(entities);
+        }
 
-    public virtual void Delete(TEntity entity)
-    {
-        _ = _entitySet.Remove(entity);
-    }
-
-    public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities)
-    {
-        await _entitySet.AddRangeAsync(entities);
-    }
-
-    public virtual void UpdateRange(IEnumerable<TEntity> entities)
-    {
-        _entitySet.UpdateRange(entities);
-    }
-
-    public virtual void DeleteRange(IEnumerable<TEntity> entities)
-    {
-        _entitySet.RemoveRange(entities);
+        public virtual void DeleteRange(IEnumerable<TEntity> entities)
+        {
+            _entitySet.RemoveRange(entities);
+        }
     }
 }
