@@ -4,24 +4,24 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
 
-namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations
-{
-    /// <summary>
-    /// Implementa um repositório genérico para a entidade do tipo <typeparamref name="TEntity"/>.
-    /// </summary>
-    /// <typeparam name="TEntity">O tipo da entidade gerenciada pelo repositório. Deve ser uma classe.</typeparam>
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
-    {
-        private readonly DbSet<TEntity> _entitySet;
+namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations;
 
-        /// <summary>
-        /// Inicializa uma nova instância da classe <see cref="Repository{TEntity}"/> com o contexto de banco de dados fornecido.
-        /// </summary>
-        /// <param name="context">O contexto de banco de dados usado para acessar a fonte de dados.</param>\
-        protected Repository(DbContext context)
-        {
-            _entitySet = context.Set<TEntity>();
-        }
+/// <summary>
+/// Implementa um repositório genérico para a entidade do tipo <typeparamref name="TEntity"/>.
+/// </summary>
+/// <typeparam name="TEntity">O tipo da entidade gerenciada pelo repositório. Deve ser uma classe.</typeparam>
+public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+{
+    private readonly DbSet<TEntity> _entitySet;
+
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="Repository{TEntity}"/> com o contexto de banco de dados fornecido.
+    /// </summary>
+    /// <param name="context">O contexto de banco de dados usado para acessar a fonte de dados.</param>\
+    protected Repository(DbContext context)
+    {
+        _entitySet = context.Set<TEntity>();
+    }
 
     public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, string includeProperties = "", bool nonTrackableEntities = false)
     {
