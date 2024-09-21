@@ -1,6 +1,7 @@
 ﻿// none
 
 using System.Linq.Expressions;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
 
@@ -13,7 +14,7 @@ namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations;
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     private readonly DbSet<TEntity> _entitySet;
-
+    private readonly DbContext _context;
     /// <summary>
     /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class with the provided database context.
     /// </summary>
@@ -21,6 +22,7 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
     protected Repository(DbContext context)
     {
         _entitySet = context.Set<TEntity>();
+        _context = context;
     }
 
     public virtual async Task<IEnumerable<TEntity>> GetAsync(
@@ -48,31 +50,31 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
     public virtual async Task InsertAsync(TEntity entity)
     {
-        _ = await _entitySet.AddAsync(entity);
+        await _entitySet.AddAsync(entity);
     }
 
     public virtual void Update(TEntity entity)
     {
-        _ = _entitySet.Update(entity);
+        _entitySet.Update(entity);
     }
 
     public virtual void Delete(TEntity entity)
     {
-        _ = _entitySet.Remove(entity);
+        _entitySet.Remove(entity);
     }
 
     public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities)
     {
-        await _entitySet.AddRangeAsync(entities);
+        await _context.BulkInsertAsync(entities);
     }
 
-    public virtual void UpdateRange(IEnumerable<TEntity> entities)
+    public virtual async void UpdateRange(IEnumerable<TEntity> entities)
     {
-        _entitySet.UpdateRange(entities);
+        await _context.BulkUpdateAsync(entities);
     }
 
-    public virtual void DeleteRange(IEnumerable<TEntity> entities)
+    public virtual async void DeleteRange(IEnumerable<TEntity> entities)
     {
-        _entitySet.RemoveRange(entities);
+        await _context.BulkDeleteAsync(entities);
     }
 }
