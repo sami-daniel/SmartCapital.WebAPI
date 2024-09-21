@@ -11,27 +11,27 @@ using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
 namespace SmartCapital.WebAPI.Application.Implementations;
 
 /// <summary>
-/// Fornece a implementação dos serviços relacionados a usuários, incluindo operações CRUD e filtragem.
+/// Provides the implementation of user-related services, including CRUD operations and filtering.
 /// </summary>
 public class UserService : IUserService
 {
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
-    /// Inicializa uma nova instância da classe <see cref="UserService"/> com a unidade de trabalho fornecida.
+    /// Initializes a new instance of the <see cref="UserService"/> class with the provided unit of work.
     /// </summary>
-    /// <param name="unitOfWork">A unidade de trabalho usada para gerenciar operações de repositório e transações.</param>
+    /// <param name="unitOfWork">The unit of work used to manage repository operations and transactions.</param>
     public UserService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
     /// <summary>
-    /// Adiciona um novo usuário ao sistema.
+    /// Adds a new user to the system.
     /// </summary>
-    /// <param name="userToAdd">O usuário a ser adicionado.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
-    /// <exception cref="ExistingUserException">Lançada quando um usuário com o mesmo nome já existe.</exception>
+    /// <param name="userToAdd">The user to be added.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ExistingUserException">Thrown when a user with the same name already exists.</exception>
     public async Task AddUserAsync(User userToAdd)
     {
         UserValidationHelper.ValidateUser(userToAdd);
@@ -52,18 +52,18 @@ public class UserService : IUserService
             catch (DbUpdateException)
             {
                 await transaction.RollbackAsync();
-                throw new ExistingUserException($"Um usuário com o nome {userToAdd.UserName} já existe.");
+                throw new ExistingUserException($"A user with the name {userToAdd.UserName} already exists.");
             }
         }
     }
 
-        /// <summary>
-        /// Obtém todos os usuários do sistema.
-        /// </summary>
-        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os usuários.</returns>
-        public async Task<IEnumerable<User>> GetAllUsersAsync(Expression<Func<User, bool>>? filter = null, Func<IQueryable<User>, IOrderedQueryable<User>>? orderBy = null, string includeProperties = "")
-        {
-            var users = await _unitOfWork.UserRepository.GetAsync(filter, orderBy, includeProperties);
+    /// <summary>
+    /// Gets all users from the system.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The result is a collection of all users.</returns>
+    public async Task<IEnumerable<User>> GetAllUsersAsync(Expression<Func<User, bool>>? filter = null, Func<IQueryable<User>, IOrderedQueryable<User>>? orderBy = null, string includeProperties = "")
+    {
+        var users = await _unitOfWork.UserRepository.GetAsync(filter, orderBy, includeProperties);
 
         foreach (var user in users)
         {
@@ -74,11 +74,11 @@ public class UserService : IUserService
     }
 
     /// <summary>
-    /// Obtém um usuário pelo nome.
+    /// Gets a user by name.
     /// </summary>
-    /// <param name="userName">O nome do usuário a ser obtido.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o usuário com o nome especificado, ou nulo se nenhum usuário for encontrado.</returns>
-    /// <exception cref="ArgumentNullException">Lançada quando o nome do usuário é nulo ou vazio.</exception>
+    /// <param name="userName">The name of the user to be obtained.</param>
+    /// <returns>A task that represents the asynchronous operation. The result is the user with the specified name, or null if no user is found.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the username is null or empty.</exception>
     public async Task<User?> GetUserByNameAsync(string userName)
     {
         ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
@@ -96,26 +96,26 @@ public class UserService : IUserService
     }
 
     /// <summary>
-    /// Remove um usuário existente do sistema.
+    /// Removes an existing user from the system.
     /// </summary>
-    /// <param name="userToRemove">O usuário a ser removido.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
-    /// <exception cref="ArgumentNullException">Lançada quando o usuário a ser removido é nulo.</exception>
+    /// <param name="userToRemove">The user to be removed.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the user to be removed is null.</exception>
     public async Task RemoveUserAsync(User userToRemove)
     {
-        ArgumentNullException.ThrowIfNull(userToRemove, "O usuário a ser removido não pode ser nulo.");
+        ArgumentNullException.ThrowIfNull(userToRemove, "The user to be removed cannot be null.");
 
         _unitOfWork.UserRepository.Delete(userToRemove);
         await _unitOfWork.CompleteAsync();
     }
 
     /// <summary>
-    /// Atualiza um usuário existente no sistema.
+    /// Updates an existing user in the system.
     /// </summary>
-    /// <param name="userName">O nome do usuário a ser atualizado.</param>
-    /// <param name="updatedUser">O objeto usuário atualizado.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o objeto usuário atualizado, ou nulo se o usuário não for encontrado.</returns>
-    /// <exception cref="ExistingUserException">Lançada quando um usuário com o mesmo nome já existe.</exception>
+    /// <param name="userName">The name of the user to be updated.</param>
+    /// <param name="updatedUser">The updated user object.</param>
+    /// <returns>A task that represents the asynchronous operation. The result is the updated user object, or null if the user is not found.</returns>
+    /// <exception cref="ExistingUserException">Thrown when a user with the same name already exists.</exception>
     public async Task<User?> UpdateUserAsync(string userName, User updatedUser)
     {
         UserValidationHelper.ValidateUser(updatedUser);
@@ -145,7 +145,7 @@ public class UserService : IUserService
             catch (DbUpdateException)
             {
                 await transaction.RollbackAsync();
-                throw new ExistingUserException($"Um usuário com o nome {user.UserName} já existe.");
+                throw new ExistingUserException($"A user with the name {user.UserName} already exists.");
             }
         }
 

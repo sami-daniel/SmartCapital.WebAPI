@@ -12,29 +12,30 @@ using SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces;
 namespace SmartCapital.WebAPI.Application.Implementations;
 
 /// <summary>
-/// Fornece a implementação dos serviços relacionados a perfis, incluindo operações CRUD e filtragem.
+/// Provides the implementation of profile-related services, including CRUD operations and filtering.
 /// </summary>
 public class ProfileService : IProfileService
 {
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
-    /// Inicializa uma nova instância da classe <see cref="ProfileService"/> com a unidade de trabalho fornecida.
+    /// Initializes a new instance of the <see cref="ProfileService"/> class with the provided unit of work.
     /// </summary>
-    /// <param name="unitOfWork">A unidade de trabalho usada para gerenciar operações de repositório e transações.</param>
+    /// <param name="unitOfWork">The unit of work used to manage repository operations and transactions.</param>
     public ProfileService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
     /// <summary>
-    /// Adiciona um novo perfil ao sistema.
+    /// Adds a new profile to the system.
     /// </summary>
-    /// <param name="profileToAdd">O perfil a ser adicionado.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
-    /// <exception cref="ArgumentNullException">Lançada quando o perfil a ser adicionado é nulo.</exception>
-    /// <exception cref="ArgumentException">Lançada quando o nome do perfil é inválido.</exception>
-    /// <exception cref="ExistingProfileException">Lançada quando um perfil com o mesmo nome já existe.</exception>
+    /// <param name="profileToAdd">The profile to be added.</param>
+    /// <param name="userName">The username of the user adding the profile.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the profile to be added is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when the profile name is invalid.</exception>
+    /// <exception cref="ExistingProfileException">Thrown when a profile with the same name already exists.</exception>
     public async Task AddProfileAsync(Profile profileToAdd, string userName)
     {
         ProfileValidationHelper.ValidateProfile(profileToAdd);
@@ -43,15 +44,15 @@ public class ProfileService : IProfileService
 
         var users = await _unitOfWork.UserRepository.GetAsync(u => u.UserName == userName, includeProperties: "Profiles");
 
-        var user = users.FirstOrDefault() ?? throw new ArgumentException("O Usuário que está adicionando o Perfil não foi encontrado.");
+        var user = users.FirstOrDefault() ?? throw new ArgumentException("The user adding the profile was not found.");
         if (user.Profiles.Any(p => p.ProfileName == profileToAdd.ProfileName))
         {
-            // FIXME: Essa verificação deveria também ser implementada no banco de dados
-            // para maior consistencia e integridade. A unica coisa que proteje o usuário
-            // de adicionar um perfil com o mesmo nome é a aplicação, o que não é suficiente
-            // e inconsistente.
+            // FIXME: This check should also be implemented in the database
+            // for greater consistency and integrity. The only thing protecting the user
+            // from adding a profile with the same name is the application, which is not sufficient
+            // and inconsistent.
 
-            throw new ExistingProfileException($"Um Perfil com o nome {profileToAdd.ProfileName} já existe.");
+            throw new ExistingProfileException($"A profile with the name {profileToAdd.ProfileName} already exists.");
         }
 
         using (var transaction = await _unitOfWork.StartTransactionAsync())
@@ -65,15 +66,18 @@ public class ProfileService : IProfileService
             catch (DbUpdateException)
             {
                 await transaction.RollbackAsync();
-                throw new ExistingProfileException($"Um Perfil com o nome {profileToAdd.ProfileName} já existe.");
+                throw new ExistingProfileException($"A profile with the name {profileToAdd.ProfileName} already exists.");
             }
         }
     }
 
     /// <summary>
-    /// Obtém todos os perfis do sistema.
+    /// Gets all profiles from the system.
     /// </summary>
-    /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os perfis.</returns>
+    /// <param name="filter">An expression that defines the filtering criteria for the profiles.</param>
+    /// <param name="orderBy">A function that defines the ordering of the profiles.</param>
+    /// <param name="includeProperties">A comma-separated list of navigation properties to include in the query.</param>
+    /// <returns>A task that represents the asynchronous operation. The result is a collection of all profiles.</returns>
     public async Task<IEnumerable<Profile>> GetAllProfilesAsync(Expression<Func<Profile, bool>>? filter = null,
                                                                 Func<IQueryable<Profile>, IOrderedQueryable<Profile>>? orderBy = null,
                                                                 string includeProperties = "")
@@ -82,27 +86,27 @@ public class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Remove um perfil existente do sistema.
+    /// Removes an existing profile from the system.
     /// </summary>
-    /// <param name="profileToRemove">O perfil a ser removido.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
-    /// <exception cref="ArgumentNullException">Lançada quando o perfil a ser removido é nulo.</exception>
+    /// <param name="profileToRemove">The profile to be removed.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the profile to be removed is null.</exception>
     public async Task RemoveProfileAsync(Profile profileToRemove)
     {
-        ArgumentNullException.ThrowIfNull(profileToRemove, "O Perfil a Remover não pode ser nulo.");
+        ArgumentNullException.ThrowIfNull(profileToRemove, "The profile to remove cannot be null.");
 
         _unitOfWork.ProfileRepository.Delete(profileToRemove);
         await _unitOfWork.CompleteAsync();
     }
 
     /// <summary>
-    /// Atualiza um perfil existente no sistema.
+    /// Updates an existing profile in the system.
     /// </summary>
-    /// <param name="profileName">O nome do perfil a ser atualizado.</param>
-    /// <param name="updatedProfile">O objeto perfil atualizado.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é o objeto perfil atualizado, ou nulo se o perfil não for encontrado.</returns>
-    /// <exception cref="ArgumentException">Lançada quando o nome do perfil ou o perfil atualizado é nulo ou inválido.</exception>
-    /// <exception cref="ExistingProfileException">Lançada quando um perfil com o mesmo nome já existe.</exception>
+    /// <param name="profileName">The name of the profile to be updated.</param>
+    /// <param name="updatedProfile">The updated profile object.</param>
+    /// <returns>A task that represents the asynchronous operation. The result is the updated profile object, or null if the profile is not found.</returns>
+    /// <exception cref="ArgumentException">Thrown when the profile name or the updated profile is null or invalid.</exception>
+    /// <exception cref="ExistingProfileException">Thrown when a profile with the same name already exists.</exception>
     public async Task<Profile?> UpdateProfileAsync(string profileName, Profile updatedProfile)
     {
         ArgumentNullException.ThrowIfNullOrEmpty(profileName, nameof(profileName));
@@ -120,19 +124,19 @@ public class ProfileService : IProfileService
 
         if (profile.ProfileName.Length > 255)
         {
-            throw new ArgumentException("O tamanho do Nome do Perfil não pode exceder 255 caracteres.");
+            throw new ArgumentException("The profile name cannot exceed 255 characters.");
         }
 
         if (!Regex.Match(profile.ProfileName, "^[a-zA-Z0-9 ]*$").Success)
         {
-            throw new ArgumentException("O Nome do Perfil pode conter somente letras, números e espaços.");
+            throw new ArgumentException("The profile name can only contain letters, numbers, and spaces.");
         }
 
         if (profile.ProfileOpeningBalance != null)
         {
             if (profile.ProfileOpeningBalance > 999_999_999.99m)
             {
-                throw new ArgumentException("O tamanho do Saldo Inicial do Perfil não pode ser maior que 999.999.999,99.");
+                throw new ArgumentException("The profile opening balance cannot be greater than 999,999,999.99.");
             }
         }
 
@@ -151,7 +155,7 @@ public class ProfileService : IProfileService
             catch (DbUpdateException)
             {
                 await transaction.RollbackAsync();
-                throw new ExistingProfileException($"Um Perfil com o nome {profile.ProfileName} já existe.");
+                throw new ExistingProfileException($"A profile with the name {profile.ProfileName} already exists.");
             }
         }
 

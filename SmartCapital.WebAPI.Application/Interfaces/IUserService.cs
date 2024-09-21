@@ -6,50 +6,50 @@ using SmartCapital.WebAPI.Domain.Domain;
 namespace SmartCapital.WebAPI.Application.Interfaces
 {
     /// <summary>
-    /// Define os contratos para serviços relacionados a usuários.
+    /// Defines the contracts for user-related services.
     /// </summary>
     public interface IUserService
     {
         /// <summary>
-        /// Adiciona um novo usuário ao sistema.
+        /// Adds a new user to the system.
         /// </summary>
-        /// <param name="userToAdd">O usuário a ser adicionado.</param>
-        /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
+        /// <param name="userToAdd">The user to be added.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public Task AddUserAsync(User userToAdd);
 
         /// <summary>
-        /// Atualiza um usuário existente no sistema.
+        /// Updates an existing user in the system.
         /// </summary>
-        /// <param name="userName">O nome do usuário a ser modificado.</param>
-        /// <param name="updatedUser">O objeto <see cref="User"/> contendo as informações atualizadas do usuário.</param>
+        /// <param name="userName">The name of the user to be updated.</param>
+        /// <param name="updatedUser">The <see cref="User"/> object containing the updated user information.</param>
         /// <returns>
-        /// Uma tarefa que representa a operação assíncrona. O resultado da tarefa contém o objeto <see cref="User"/> atualizado se a atualização for bem-sucedida;
-        /// caso contrário, retorna <c>null</c> se o usuário não for encontrado ou se a atualização falhar.
+        /// A task that represents the asynchronous operation. The task result contains the updated <see cref="User"/> object if the update is successful;
+        /// otherwise, returns <c>null</c> if the user is not found or if the update fails.
         /// </returns>
         public Task<User?> UpdateUserAsync(string userName, User updatedUser);
 
         /// <summary>
-        /// Remove um usuário existente do sistema.
+        /// Removes an existing user from the system.
         /// </summary>
-        /// <param name="userToRemove">O usuário a ser removido.</param>
-        /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
+        /// <param name="userToRemove">The user to be removed.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public Task RemoveUserAsync(User userToRemove);
 
         /// <summary>
-        /// Obtém todos os usuários do sistema.
+        /// Gets all users from the system.
         /// </summary>
-        /// <param name="filter">Uma expressão que define o critério de filtragem dos usuários.</param>
-        /// <param name="includeProperties">Uma lista separada por vírgulas de propriedades de navegação a serem incluídas na consulta.</param>
-        /// <param name="orderBy">Uma função que define a ordenação dos usuários.</param>
-        /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os usuários.</returns>
+        /// <param name="filter">An expression that defines the filtering criteria for the users.</param>
+        /// <param name="includeProperties">A comma-separated list of navigation properties to include in the query.</param>
+        /// <param name="orderBy">A function that defines the ordering of the users.</param>
+        /// <returns>A task that represents the asynchronous operation. The result is a collection of all users.</returns>
         public Task<IEnumerable<User>> GetAllUsersAsync(Expression<Func<User, bool>>? filter = null, Func<IQueryable<User>, IOrderedQueryable<User>>? orderBy = null, string includeProperties = "");
 
         /// <summary>
-        /// Obtém o usuário de acordo com o nome.
+        /// Gets the user according to the name.
         /// </summary>
-        /// <param name="userName">O nome do usuário a ser obtido.</param>
-        /// <returns>O usuário correspondente ao nome fornecido.</returns>
-        /// <remarks>Se não for encontrado nenhum usuário, é retornado <c>null</c>.</remarks>
+        /// <param name="userName">The name of the user to be obtained.</param>
+        /// <returns>The user corresponding to the provided name.</returns>
+        /// <remarks>If no user is found, <c>null</c> is returned.</remarks>
         public Task<User?> GetUserByNameAsync(string userName);
     }
 }

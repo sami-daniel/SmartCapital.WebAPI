@@ -6,41 +6,41 @@ using SmartCapital.WebAPI.Domain.Domain;
 namespace SmartCapital.WebAPI.Application.Interfaces;
 
 /// <summary>
-/// Define os contratos para serviços relacionados a perfis.
+/// Defines the contracts for profile-related services.
 /// </summary>
 public interface IProfileService
 {
     /// <summary>
-    /// Adiciona um novo perfil ao sistema.
+    /// Adds a new profile to the system.
     /// </summary>
-    /// <param name="profileToAdd">O perfil a ser adicionado.</param>
-    /// <param name="userName">O nome do usuário que está adicionando o perfil.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
+    /// <param name="profileToAdd">The profile to be added.</param>
+    /// <param name="userName">The username of the user adding the profile.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task AddProfileAsync(Profile profileToAdd, string userName);
 
     /// <summary>
-    /// Atualiza um perfil existente no sistema.
+    /// Updates an existing profile in the system.
     /// </summary>
-    /// <param name="profileName">O nome do perfil a ser modificado.</param>
-    /// <param name="profile">O objeto <see cref="Profile"/> contendo as informações atualizadas do perfil.</param>
+    /// <param name="profileName">The name of the profile to be updated.</param>
+    /// <param name="updatedProfile">The <see cref="Profile"/> object containing the updated profile information.</param>
     /// <returns>
-    /// Uma tarefa que representa a operação assíncrona. O resultado da tarefa contém o objeto <see cref="Profile"/> atualizado se a atualização for bem-sucedida;
-    /// caso contrário, retorna <c>null</c> se o perfil não for encontrado ou se a atualização falhar.
+    /// A task that represents the asynchronous operation. The task result contains the updated <see cref="Profile"/> object if the update is successful;
+    /// otherwise, returns <c>null</c> if the profile is not found or if the update fails.
     /// </returns>
     public Task<Profile?> UpdateProfileAsync(string profileName, Profile updatedProfile);
 
     /// <summary>
-    /// Remove um perfil existente do sistema.
+    /// Removes an existing profile from the system.
     /// </summary>
-    /// <param name="profileToRemove">O perfil a ser removido.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
+    /// <param name="profileToRemove">The profile to be removed.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task RemoveProfileAsync(Profile profileToRemove);
 
     /// <summary>
-    /// Obtém todos os perfis do sistema.
+    /// Gets all profiles from the system.
     /// </summary>
-    /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de todos os perfis.</returns>
+    /// <returns>A task that represents the asynchronous operation. The result is a collection of all profiles.</returns>
     public Task<IEnumerable<Profile>> GetAllProfilesAsync(Expression<Func<Profile, bool>>? filter = null,
-                                                                Func<IQueryable<Profile>, IOrderedQueryable<Profile>>? orderBy = null,
-                                                                string includeProperties = "");
+                                                          Func<IQueryable<Profile>, IOrderedQueryable<Profile>>? orderBy = null,
+                                                          string includeProperties = "");
 }
