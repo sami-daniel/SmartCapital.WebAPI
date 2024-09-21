@@ -38,7 +38,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.CategoryId).HasName("PRIMARY");
 
-            entity.ToTable("categories");
+            entity.ToTable("Categories");
 
             entity.HasIndex(e => e.CategoryName, "CategoryName_UNIQUE").IsUnique();
 
@@ -53,7 +53,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-            entity.ToTable("expenses");
+            entity.ToTable("Expenses");
 
             entity.HasIndex(e => e.CategoryId, "fk_Expenses_Category1_idx");
 
@@ -87,7 +87,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-            entity.ToTable("incomes");
+            entity.ToTable("Incomes");
 
             entity.HasIndex(e => e.CategoryId, "fk_Incomes_Category1_idx");
 
@@ -121,7 +121,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-            entity.ToTable("profiles");
+            entity.ToTable("Profiles");
 
             entity.HasIndex(e => e.ProfileId, "ProfileID_UNIQUE").IsUnique();
 
@@ -145,7 +145,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity
                 .HasNoKey()
-                .ToView("savings_result");
+                .ToView("Savings_Result");
 
             entity.Property(e => e.ProfileId).HasColumnName("ProfileID");
             entity.Property(e => e.ProfileName).HasMaxLength(255);
@@ -158,7 +158,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.UserId).HasName("PRIMARY");
 
-            entity.ToTable("users");
+            entity.ToTable("Users");
 
             entity.HasIndex(e => e.UserName, "UserName_UNIQUE").IsUnique();
 
