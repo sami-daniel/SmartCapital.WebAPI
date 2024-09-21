@@ -7,17 +7,17 @@ using SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
 namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Implementations;
 
 /// <summary>
-/// Implementa um repositório genérico para a entidade do tipo <typeparamref name="TEntity"/>.
+/// Implements a generic repository for the entity of type <typeparamref name="TEntity"/>.
 /// </summary>
-/// <typeparam name="TEntity">O tipo da entidade gerenciada pelo repositório. Deve ser uma classe.</typeparam>
+/// <typeparam name="TEntity">The type of entity managed by the repository. Must be a class.</typeparam>
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     private readonly DbSet<TEntity> _entitySet;
 
     /// <summary>
-    /// Inicializa uma nova instância da classe <see cref="Repository{TEntity}"/> com o contexto de banco de dados fornecido.
+    /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class with the provided database context.
     /// </summary>
-    /// <param name="context">O contexto de banco de dados usado para acessar a fonte de dados.</param>\
+    /// <param name="context">The database context used to access the data source.</param>
     protected Repository(DbContext context)
     {
         _entitySet = context.Set<TEntity>();
@@ -45,7 +45,6 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
         return orderBy != null ? await orderBy(query).ToListAsync() : await query.ToListAsync();
     }
-
 
     public virtual async Task InsertAsync(TEntity entity)
     {

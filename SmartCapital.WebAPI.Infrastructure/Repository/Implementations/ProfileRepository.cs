@@ -8,14 +8,14 @@ using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 namespace SmartCapital.WebAPI.Infrastructure.Repository.Implementations
 {
     /// <summary>
-    /// Implementa um repositório específico para a entidade <see cref="Profile"/>.
+    /// Implements a specific repository for the entity <see cref="Profile"/>.
     /// </summary>
     public class ProfileRepository : Repository<Profile>, IProfileRepository
     {
         /// <summary>
-        /// Inicializa uma nova instância da classe <see cref="ProfileRepository"/> com o contexto de banco de dados fornecido.
+        /// Initializes a new repository instance for the class <see cref="ProfileRepository"/> with the provided database context.
         /// </summary>
-        /// <param name="applicationDbContext">O contexto de banco de dados usado para acessar a fonte de dados.</param>
+        /// <param name="applicationDbContext">The database context used to access the data source.</param>
         public ProfileRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
         {
         }

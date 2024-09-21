@@ -8,14 +8,14 @@ using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 namespace SmartCapital.WebAPI.Infrastructure.Repository.Implementations
 {
     /// <summary>
-    /// Implementa um repositório específico para a entidade <see cref="User"/>.
+    /// Implements a specific repository for the entity <see cref="User"/>.
     /// </summary>
     public class UserRepository : Repository<User>, IUserRepository
     {
         /// <summary>
-        /// Inicializa uma nova instância da classe <see cref="UserRepository"/> com o contexto de banco de dados fornecido.
+        /// Initializes a new instance of the <see cref="UserRepository"/> class with the provided database context.
         /// </summary>
-        /// <param name="applicationDbContext">O contexto de banco de dados usado para acessar a fonte de dados.</param>
+        /// <param name="applicationDbContext">The database context used to access the data source.</param>
         public UserRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
         {
         }

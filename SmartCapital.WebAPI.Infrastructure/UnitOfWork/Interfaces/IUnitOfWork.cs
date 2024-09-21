@@ -7,39 +7,39 @@ using SmartCapital.WebAPI.Infrastructure.Repository.Interfaces;
 namespace SmartCapital.WebAPI.Infrastructure.UnitOfWork.Interfaces
 {
     /// <summary>
-    /// Define contratos para uma unidade de trabalho que gerencia repositórios e operações de banco de dados.
+    /// Defines contracts for a unit of work that manages repositories and database operations.
     /// </summary>
     public interface IUnitOfWork : IDisposable
     {
         /// <summary>
-        /// Obtém o repositório para a entidade <see cref="Profile"/>.
+        /// Gets the repository for the entity <see cref="Profile"/>.
         /// </summary>
         /// <value>
-        /// Uma instância do repositório para a entidade <see cref="Profile"/>.
+        /// An instance of the repository for the entity <see cref="Profile"/>.
         /// </value>
         public IProfileRepository ProfileRepository { get; }
 
         /// <summary>
-        /// Obtém o repositório para a entidade <see cref="User"/>.
+        /// Gets the repository for the entity <see cref="User"/>.
         /// </summary>
         /// <value>
-        /// Uma instância do repositório para a entidade <see cref="User"/>.
+        /// An instance of the repository for the entity <see cref="User"/>.
         /// </value>
         public IUserRepository UserRepository { get; }
 
         /// <summary>
-        /// Salva todas as alterações feitas no contexto atual de banco de dados.
+        /// Saves all changes made in the current database context.
         /// </summary>
         /// <returns>
-        /// Uma tarefa que representa a operação assíncrona. O resultado é o número de alterações feitas no banco de dados.
+        /// A task that represents the asynchronous operation. The result is the number of changes made to the database.
         /// </returns>
         public Task<int> CompleteAsync();
 
         /// <summary>
-        /// Inicia uma nova transação no contexto atual de banco de dados.
+        /// Starts a new transaction in the current database context.
         /// </summary>
         /// <returns>
-        /// Uma tarefa que representa a operação assíncrona. O resultado é a transação do contexto de banco de dados.
+        /// A task that represents the asynchronous operation. The result is the transaction of the database context.
         /// </returns>
         public Task<IDbContextTransaction> StartTransactionAsync();
     }

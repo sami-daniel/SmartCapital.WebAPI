@@ -1,62 +1,63 @@
 ﻿// none
 
+
 using System.Linq.Expressions;
 
 namespace SmartCapital.WebAPI.Infrastructure.Repository.Core.Interfaces;
 
 /// <summary>
-/// Define os contratos para um repositório genérico que opera com entidades do tipo <typeparamref name="TEntity"/>.
+/// Defines the contracts for a generic repository that operates with entities of type <typeparamref name="TEntity"/>.
 /// </summary>
-/// <typeparam name="TEntity">O tipo da entidade que o repositório gerencia. Deve ser uma classe.</typeparam>
+/// <typeparam name="TEntity">The type of entity that the repository manages. Must be a class.</typeparam>
 public interface IRepository<TEntity> where TEntity : class
 {
     /// <summary>
-    /// Obtém uma coleção de entidades que correspondem ao filtro fornecido.
+    /// Gets a collection of entities that match the provided filter.
     /// </summary>
-    /// <param name="filter">Uma expressão que define o critério de filtragem das entidades. Pode ser <c>null</c>.</param>
-    /// <param name="orderBy">Uma função que define a ordenação das entidades. Pode ser <c>null</c>.</param>
-    /// <param name="includeProperties">Uma string que especifica as propriedades de navegação, separadas por virgula, para incluir na consulta. Se não houver propriedades para incluir, deve ser uma string vazia.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona. O resultado é uma coleção de entidades que atendem ao critério de filtro e ordenação especificados.</returns>
+    /// <param name="filter">An expression that defines the filtering criteria for the entities. Can be <c>null</c>.</param>
+    /// <param name="orderBy">A function that defines the ordering of the entities. Can be <c>null</c>.</param>
+    /// <param name="includeProperties">A string that specifies the navigation properties, separated by commas, to include in the query. If there are no properties to include, it should be an empty string.</param>
+    /// <returns>A task that represents the asynchronous operation. The result is a collection of entities that meet the specified filter and ordering criteria.</returns>
     public Task<IEnumerable<TEntity>> GetAsync(
         Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         string includeProperties = "");
 
     /// <summary>
-    /// Insere uma nova entidade no repositório.
+    /// Inserts a new entity into the repository.
     /// </summary>
-    /// <param name="entity">A entidade a ser inserida.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
+    /// <param name="entity">The entity to be inserted.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task InsertAsync(TEntity entity);
 
     /// <summary>
-    /// Insere um conjunto de entidades no repositório.
+    /// Inserts a set of entities into the repository.
     /// </summary>
-    /// <param name="entities">A coleção de entidades a ser inserida.</param>
-    /// <returns>Uma tarefa que representa a operação assíncrona.</returns>
+    /// <param name="entities">The collection of entities to be inserted.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task InsertRangeAsync(IEnumerable<TEntity> entities);
 
     /// <summary>
-    /// Atualiza uma entidade existente no repositório.
+    /// Updates an existing entity in the repository.
     /// </summary>
-    /// <param name="entity">A entidade a ser atualizada.</param>
+    /// <param name="entity">The entity to be updated.</param>
     public void Update(TEntity entity);
 
     /// <summary>
-    /// Atualiza um conjunto de entidades existentes no repositório.
+    /// Updates a set of existing entities in the repository.
     /// </summary>
-    /// <param name="entities">A coleção de entidades a ser atualizada.</param>
+    /// <param name="entities">The collection of entities to be updated.</param>
     public void UpdateRange(IEnumerable<TEntity> entities);
 
     /// <summary>
-    /// Remove uma entidade existente do repositório.
+    /// Removes an existing entity from the repository.
     /// </summary>
-    /// <param name="entity">A entidade a ser removida.</param>
+    /// <param name="entity">The entity to be removed.</param>
     public void Delete(TEntity entity);
 
     /// <summary>
-    /// Remove um conjunto de entidades existentes do repositório.
+    /// Removes a set of existing entities from the repository.
     /// </summary>
-    /// <param name="entities">A coleção de entidades a ser removida.</param>
+    /// <param name="entities">The collection of entities to be removed.</param>
     public void DeleteRange(IEnumerable<TEntity> entities);
 }
