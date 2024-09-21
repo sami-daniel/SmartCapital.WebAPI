@@ -97,7 +97,6 @@ public class Program
 
         // Registering services of DataAcess
         builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabase"] ?? throw new InvalidOperationException("A string de conexão não esta definida."), new MySqlServerVersion(new Version(8, 4, 0))));
-        builder.Services.AddScoped<DapperContext>();
 
         // Repostories and UnitOfWork
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
