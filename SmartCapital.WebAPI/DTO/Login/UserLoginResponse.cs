@@ -1,26 +1,24 @@
-﻿// none
-
-namespace SmartCapital.WebAPI.DTO.Login
+﻿namespace SmartCapital.WebAPI.DTO.Login
 {
     /// <summary>
-    /// Representa a resposta de autenticação do usuário, contendo informações sobre o usuário autenticado e o token JWT gerado.
+    /// Represents the user authentication response, containing information about the authenticated user and the generated JWT token.
     /// </summary>
     public class UserLoginResponse
     {
         /// <summary>
-        /// O nome do usuário autenticado.
+        /// The name of the authenticated user.
         /// </summary>
         /// <example>user@example.com</example>
         public string User { get; set; } = null!;
 
         /// <summary>
-        /// O papel ou a função do usuário no sistema.
+        /// The role or function of the user in the system.
         /// </summary>
         /// <example>APIUser</example>
         public string Role { get; set; } = null!;
 
         /// <summary>
-        /// O token JWT gerado para o usuário autenticado.
+        /// The JWT token generated for the authenticated user.
         /// </summary>
         /// <example>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</example>
         public string Token { get; set; } = null!;

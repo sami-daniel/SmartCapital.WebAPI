@@ -1,28 +1,25 @@
-﻿// none
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SmartCapital.WebAPI.DTO.Login
 {
     /// <summary>
-    /// Representa a solicitação de login do usuário, contendo as credenciais necessárias para autenticação.
+    /// Represents the user login request, containing the credentials needed for authentication.
     /// </summary>
     public class UserLoginRequest
     {
         /// <summary>
-        /// O nome do usuário usado para autenticação. Deve ser fornecido e não pode estar vazio.
+        /// The username used for authentication. Must be provided and cannot be empty.
         /// </summary>
-        /// <example>user@example.com</example>
-        [Required(ErrorMessage = "O Nome do Usuário não pode ser vazio.")]
-        [StringLength(255, ErrorMessage = "O Nome do Usuário não pode exceder {0} caracteres.")]
+        [Required(ErrorMessage = "The Username cannot be empty.")]
+        [StringLength(255, ErrorMessage = "The Username cannot exceed {0} characters.")]
         public string UserName { get; set; } = null!;
 
         /// <summary>
-        /// A senha do usuário usada para autenticação. Deve ser fornecida e não pode estar vazia.
+        /// The user's password used for authentication. Must be provided and cannot be empty.
         /// </summary>
         /// <example>yourpassword123</example>
-        [Required(ErrorMessage = "A Senha do Usuário não pode ser vazia.")]
-        [StringLength(255, ErrorMessage = "A Senha do Usuário não pode exceder {0} caracteres.")]
+        [Required(ErrorMessage = "The User Password cannot be empty.")]
+        [StringLength(255, ErrorMessage = "The User Password cannot exceed {0} characters.")]
         public string UserPassword { get; set; } = null!;
     }
 }

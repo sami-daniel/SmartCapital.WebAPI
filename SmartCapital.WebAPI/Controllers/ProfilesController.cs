@@ -11,7 +11,7 @@ using SmartCapital.WebAPI.Models;
 namespace SmartCapital.WebAPI.Controllers;
 
 /// <summary>
-/// Controlador responsável por gerenciar operações relacionadas a perfis.
+/// Controller responsible for managing operations related to profiles.
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
@@ -21,19 +21,19 @@ public class ProfilesController : ControllerBase
     private readonly IProfileService _profileService;
 
     /// <summary>
-    /// Inicializa uma nova instância de <see cref="ProfilesController"/> com o serviço de perfis fornecido.
+    /// Initializes a new instance of <see cref="ProfilesController"/> with the provided profile service.
     /// </summary>
-    /// <param name="profileService">Serviço para gerenciar operações de perfil.</param>
+    /// <param name="profileService">Service to manage profile operations.</param>
     public ProfilesController(IProfileService profileService)
     {
         _profileService = profileService;
     }
 
     /// <summary>
-    /// Obtém uma lista de todos os perfis existentes.
+    /// Gets a list of all existing profiles.
     /// </summary>
-    /// <returns>Uma lista de objetos <see cref="ProfileResponse"/> representado todos os perfis do usuário.</returns>
-    /// <response code="200">Perfis encontrados com sucesso.</response>
+    /// <returns>A list of <see cref="ProfileResponse"/> objects representing all user profiles.</returns>
+    /// <response code="200">Profiles successfully found.</response>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<ProfileResponse>), 200)]
     public async Task<IActionResult> GetProfiles()
@@ -45,7 +45,7 @@ public class ProfilesController : ControllerBase
             return BadRequest(new ErrorResponse
             {
                 ErrorType = "UserNotFound",
-                Message = "Usuário não encontrado no contexto da solicitação."
+                Message = "User not found in the request context."
             });
         }
 
@@ -55,12 +55,12 @@ public class ProfilesController : ControllerBase
     }
 
     /// <summary>
-    /// Obtém um perfil pelo nome especificado.
+    /// Gets a profile by the specified name.
     /// </summary>
-    /// <param name="profileName">Nome do perfil do usuário a ser obtido.</param>
-    /// <returns>O perfil correspondente ao nome especificado.</returns>
-    /// <response code="200">Perfil encontrado com sucesso.</response>
-    /// <response code="404">Perfil com o nome especificado não foi encontrado.</response>
+    /// <param name="profileName">The name of the user profile to be obtained.</param>
+    /// <returns>The profile corresponding to the specified name.</returns>
+    /// <response code="200">Profile successfully found.</response>
+    /// <response code="404">Profile with the specified name was not found.</response>
     [HttpGet("{profileName}")]
     [ProducesResponseType(typeof(ProfileResponse), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
@@ -73,7 +73,7 @@ public class ProfilesController : ControllerBase
             return BadRequest(new ErrorResponse
             {
                 ErrorType = "UserNotFound",
-                Message = "Usuário não encontrado no contexto da solicitação."
+                Message = "User not found in the request context."
             });
         }
 
@@ -85,7 +85,7 @@ public class ProfilesController : ControllerBase
             return NotFound(new ErrorResponse
             {
                 ErrorType = "ProfileFindError",
-                Message = "O perfil com o nome especificado não foi encontrado."
+                Message = "The profile with the specified name was not found."
             });
         }
 
@@ -93,13 +93,13 @@ public class ProfilesController : ControllerBase
     }
 
     /// <summary>
-    /// Adiciona um novo perfil.
+    /// Adds a new profile.
     /// </summary>
-    /// <param name="profileAddRequest">Objeto contendo as informações do perfil a ser adicionado.</param>
-    /// <returns>Um resultado indicando o sucesso ou falha da operação.</returns>
-    /// <response code="201">Perfil criado com sucesso.</response>
-    /// <response code="400">Erro na solicitação de adição de perfil, o corpo da requisição é vazio.</response>
-    /// <response code="422">Erro na solicitação de adição de perfil, o tem erros de validação ou duplicidade.</response>
+    /// <param name="profileAddRequest">Object containing the profile information to be added.</param>
+    /// <returns>A result indicating the success or failure of the operation.</returns>
+    /// <response code="201">Profile successfully created.</response>
+    /// <response code="400">Error in the profile addition request, the request body is empty.</response>
+    /// <response code="422">Error in the profile addition request, there are validation or duplication errors.</response>
     [HttpPost]
     [ProducesResponseType(typeof(UserResponse), 201)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
@@ -113,7 +113,7 @@ public class ProfilesController : ControllerBase
             return BadRequest(new ErrorResponse
             {
                 ErrorType = "EmptyProfileAddRequest",
-                Message = "A solicitação de adição de perfil não pode ser nula."
+                Message = "The profile addition request cannot be null."
             });
         }
 
@@ -122,7 +122,7 @@ public class ProfilesController : ControllerBase
             return BadRequest(new ErrorResponse
             {
                 ErrorType = "UserNotFound",
-                Message = "Usuário não encontrado no contexto da solicitação."
+                Message = "User not found in the request context."
             });
         }
 
@@ -135,7 +135,7 @@ public class ProfilesController : ControllerBase
             return UnprocessableEntity(new ErrorResponse
             {
                 ErrorType = "ProfileCreationError",
-                Message = $"Erro ao criar o Perfil: {e.Message}"
+                Message = $"Error creating the Profile: {e.Message}"
             });
         }
         catch (ArgumentException e)
@@ -143,7 +143,7 @@ public class ProfilesController : ControllerBase
             return UnprocessableEntity(new ErrorResponse
             {
                 ErrorType = "ValidationError",
-                Message = $"Erro de validação: {e.Message}"
+                Message = $"Validation error: {e.Message}"
             });
         }
 
@@ -151,15 +151,15 @@ public class ProfilesController : ControllerBase
     }
 
     /// <summary>
-    /// Atualiza um perfil existente com base no nome do perfil especificado.
+    /// Updates an existing profile based on the specified profile name.
     /// </summary>
-    /// <param name="profileName">Nome do perfil a ser atualizado.</param>
-    /// <param name="profileUpdateRequest">Objeto contendo as informações atualizadas do perfil.</param>
-    /// <returns>Um resultado indicando o sucesso ou falha da operação.</returns>
-    /// <response code="204">Perfil atualizado com sucesso.</response>
-    /// <response code="400">Erro na solicitação de atualização de perfil.</response>
-    /// <response code="404">Não foi encontrado nenhum perfil com base no nome.</response>
-    /// <response code="422">Erro na solicitação de adição de perfil, o tem erros de validação ou duplicidade.</response>
+    /// <param name="profileName">The name of the profile to be updated.</param>
+    /// <param name="profileUpdateRequest">Object containing the updated profile information.</param>
+    /// <returns>A result indicating the success or failure of the operation.</returns>
+    /// <response code="204">Profile successfully updated.</response>
+    /// <response code="400">Error in the profile update request.</response>
+    /// <response code="404">No profile found based on the name.</response>
+    /// <response code="422">Error in the profile addition request, there are validation or duplication errors.</response>
     [HttpPut("{profileName}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
@@ -172,7 +172,7 @@ public class ProfilesController : ControllerBase
             return BadRequest(new ErrorResponse
             {
                 ErrorType = "EmptyProfileAddRequest",
-                Message = "A solicitação de adição de perfil não pode ser nula."
+                Message = "The profile addition request cannot be null."
             });
         }
 
@@ -187,7 +187,7 @@ public class ProfilesController : ControllerBase
             return UnprocessableEntity(new ErrorResponse
             {
                 ErrorType = "ProfileCreationError",
-                Message = $"Erro ao criar o Perfil: {e.Message}"
+                Message = $"Error creating the Profile: {e.Message}"
             });
         }
         catch (ArgumentException e)
@@ -195,7 +195,7 @@ public class ProfilesController : ControllerBase
             return UnprocessableEntity(new ErrorResponse
             {
                 ErrorType = "ValidationError",
-                Message = $"Erro de validação: {e.Message}"
+                Message = $"Validation error: {e.Message}"
             });
         }
 
@@ -204,7 +204,7 @@ public class ProfilesController : ControllerBase
             return NotFound(new ErrorResponse
             {
                 ErrorType = "ProfileUpdateError",
-                Message = "O perfil com o nome especificado não foi encontrado."
+                Message = "The profile with the specified name was not found."
             });
         }
 
@@ -212,11 +212,11 @@ public class ProfilesController : ControllerBase
     }
 
     /// <summary>
-    /// Remove um perfil existente com base no nome do perfil especificado.
+    /// Removes an existing profile based on the specified profile name.
     /// </summary>
-    /// <param name="profileName">O nome do perfil a ser removido.</param>
-    /// <response code="404">O perfil com o nome especificado não foi encontrado.</response>
-    /// <response code="204">O perfil foi removido com sucesso.</response>
+    /// <param name="profileName">The name of the profile to be removed.</param>
+    /// <response code="404">The profile with the specified name was not found.</response>
+    /// <response code="204">The profile was successfully removed.</response>
     [HttpDelete("{profileName}")]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
     [ProducesResponseType(204)]
@@ -232,7 +232,7 @@ public class ProfilesController : ControllerBase
             return NotFound(new ErrorResponse
             {
                 ErrorType = "ProfileNotFound",
-                Message = "O perfil com o nome fornecido não foi encontrado."
+                Message = "The profile with the provided name was not found."
             });
         }
 

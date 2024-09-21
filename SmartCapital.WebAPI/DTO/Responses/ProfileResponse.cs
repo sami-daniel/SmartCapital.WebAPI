@@ -1,51 +1,49 @@
-﻿// none
-
-using SmartCapital.WebAPI.Domain.Domain;
+﻿using SmartCapital.WebAPI.Domain.Domain;
 
 namespace SmartCapital.WebAPI.DTO.Responses;
 
 /// <summary>
-/// Representa a resposta que contém os detalhes de um perfil.
+/// Represents the response that contains the details of a profile.
 /// </summary>
 public class ProfileResponse
 {
     /// <summary>
-    /// Data de criação do perfil.
+    /// The creation date of the profile.
     /// </summary>
     public DateTime ProfileCreationDate { get; set; }
 
     /// <summary>
-    /// Nome do perfil.
+    /// The name of the profile.
     /// </summary>
     /// <remarks>
-    /// Este campo nunca deve ser nulo.
+    /// This field should never be null.
     /// </remarks>
     public string ProfileName { get; set; } = null!;
 
     /// <summary>
-    /// Saldo inicial do perfil.
+    /// The initial balance of the profile.
     /// </summary>
     /// <remarks>
-    /// Este campo é opcional e pode ser nulo.
+    /// This field is optional and can be null.
     /// </remarks>
     public decimal? ProfileOpeningBalance { get; set; }
 
     /// <summary>
-    /// Usuário associado ao perfil.
+    /// The user associated with the profile.
     /// </summary>
     public UserResponse User { get; set; } = null!;
 }
 
 /// <summary>
-/// Contém métodos de extensão para a classe <see cref="Profile"/>.
+/// Contains extension methods for the <see cref="Profile"/> class.
 /// </summary>
 public static class ProfileExtensions
 {
     /// <summary>
-    /// Converte uma instância de <see cref="Profile"/> em uma instância de <see cref="ProfileResponse"/>.
+    /// Converts an instance of <see cref="Profile"/> to an instance of <see cref="ProfileResponse"/>.
     /// </summary>
-    /// <param name="profile">A instância de <see cref="Profile"/> a ser convertida.</param>
-    /// <returns>Uma nova instância de <see cref="ProfileResponse"/> com os dados do perfil.</returns>
+    /// <param name="profile">The instance of <see cref="Profile"/> to be converted.</param>
+    /// <returns>A new instance of <see cref="ProfileResponse"/> with the profile data.</returns>
     public static ProfileResponse ToProfileResponse(this Profile profile)
     {
         return new ProfileResponse

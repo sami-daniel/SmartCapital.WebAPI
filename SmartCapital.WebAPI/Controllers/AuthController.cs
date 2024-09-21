@@ -1,6 +1,4 @@
-﻿// none
-
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +10,7 @@ using SmartCapital.WebAPI.Models;
 namespace SmartCapital.WebAPI.Controllers
 {
     /// <summary>
-    /// Controlador responsável por gerenciar operações relacionadas a autenticação.
+    /// Controller responsible for managing authentication-related operations.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -22,10 +20,10 @@ namespace SmartCapital.WebAPI.Controllers
         private readonly ILoginService _userService;
 
         /// <summary>
-        /// Inicializa uma nova instância de <see cref="AuthController"/> com o serviço de usuários fornecido.
+        /// Initializes a new instance of <see cref="AuthController"/> with the provided user service.
         /// </summary>
-        /// <param name="userService">Serviço para gerenciar operações de usuários.</param>
-        /// <param name="configuration">Set de configurações do projeto</param>
+        /// <param name="userService">Service to manage user operations.</param>
+        /// <param name="configuration">Project configuration settings.</param>
         public AuthController(IConfiguration configuration, ILoginService userService)
         {
             _configuration = configuration;
@@ -33,13 +31,13 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Autentica um usuário e gera um token JWT se as credenciais forem válidas.
+        /// Authenticates a user and generates a JWT token if the credentials are valid.
         /// </summary>
-        /// <param name="userLoginRequest">O objeto contendo as credenciais de login do usuário.</param>
-        /// <returns>Retorna um resultado de ação contendo o nome do usuário e o token JWT se a autenticação for bem-sucedida. Caso contrário, retorna um erro se o usuário não for encontrado.</returns>
-        /// <response code="200">Retorna o nome do usuário, a Role e o token JWT.</response>
-        /// <response code="404">Retorna um erro se o usuário com o nome especificado não for encontrado.</response>
-        /// <response code="400">Retorna um erro se a solicitação estiver malformada.</response>
+        /// <param name="userLoginRequest">The object containing the user's login credentials.</param>
+        /// <returns>Returns an action result containing the username and JWT token if authentication is successful. Otherwise, returns an error if the user is not found.</returns>
+        /// <response code="200">Returns the username, role, and JWT token.</response>
+        /// <response code="404">Returns an error if the user with the specified name is not found.</response>
+        /// <response code="400">Returns an error if the request is malformed.</response>
         [HttpPost("authenticate")]
         [ProducesResponseType(typeof(UserLoginResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
@@ -52,7 +50,7 @@ namespace SmartCapital.WebAPI.Controllers
                 return NotFound(new ErrorResponse
                 {
                     ErrorType = "UserFindError",
-                    Message = "O Usuário com o nome e senha especificados não foi encontrado."
+                    Message = "The user with the specified name and password was not found."
                 });
 
             var token = GenerateToken(userLoginRequest);
@@ -68,22 +66,22 @@ namespace SmartCapital.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Gera um token JWT para o usuário fornecido.
+        /// Generates a JWT token for the provided user.
         /// </summary>
-        /// <param name="user">O usuário para o qual o token JWT será gerado.</param>
-        /// <returns>O token JWT gerado.</returns>
-        /// <exception cref="InvalidOperationException">Lançado quando a configuração do segredo JWT está ausente.</exception>
+        /// <param name="user">The user for whom the JWT token will be generated.</param>
+        /// <returns>The generated JWT token.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the JWT secret configuration is missing.</exception>
         [NonAction]
         public string GenerateToken(UserLoginRequest user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["JWTSettings:Secret"] ?? throw new InvalidOperationException("O token do JWT (secret) não está definido."));
+            var key = Encoding.ASCII.GetBytes(_configuration["JWTSettings:Secret"] ?? throw new InvalidOperationException("The JWT secret is not defined."));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Role, "APIUser")
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, "APIUser")
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

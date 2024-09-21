@@ -1,6 +1,4 @@
-﻿// none
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCapital.WebAPI.Application.Exceptions;
 using SmartCapital.WebAPI.Application.Interfaces;
@@ -13,7 +11,7 @@ using SmartCapital.WebAPI.Models;
 namespace SmartCapital.WebAPI.Controllers;
 
 /// <summary>
-/// Controlador responsável por gerenciar operações relacionadas a usuários.
+/// Controller responsible for managing operations related to users.
 /// </summary>
 [Route("api/")]
 [ApiController]
@@ -23,22 +21,22 @@ public class UsersController : ControllerBase
     private readonly IUserService _userService;
 
     /// <summary>
-    /// Inicializa uma nova instância de <see cref="UsersController"/> com o serviço de usuários fornecido.
+    /// Initializes a new instance of <see cref="UsersController"/> with the provided user service.
     /// </summary>
-    /// <param name="userService">Serviço para gerenciar operações de usuário.</param>
+    /// <param name="userService">Service to manage user operations.</param>
     public UsersController(IUserService userService)
     {
         _userService = userService;
     }
 
     /// <summary>
-    /// Obtém o usuário correspondente ao nome fornecido.
+    /// Gets the user corresponding to the provided name.
     /// </summary>
-    /// <param name="userName">Nome do usuário a ser recuperado.</param>
-    /// <returns>Um objeto <see cref="UserResponse"/> representando o usuário encontrado.</returns>
-    /// <response code="200">Usuário encontrado com sucesso.</response>
-    /// <response code="404">Usuário com o nome fornecido não encontrado.</response>
-    /// <response code="403">Não autorizado o acesso ao recurso.</response>
+    /// <param name="userName">Name of the user to be retrieved.</param>
+    /// <returns>A <see cref="UserResponse"/> object representing the found user.</returns>
+    /// <response code="200">User successfully found.</response>
+    /// <response code="404">User with the provided name not found.</response>
+    /// <response code="403">Access to the resource is forbidden.</response>
     [HttpGet("{userName}")]
     [ProducesResponseType(typeof(UserResponse), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
@@ -48,7 +46,6 @@ public class UsersController : ControllerBase
         var user = await _userService.GetUserByNameAsync(userName);
 
         var userNameFromToken = HttpContext.Items["User"] as string;
-
 
         if (user != null)
         {
@@ -63,18 +60,18 @@ public class UsersController : ControllerBase
         return NotFound(new ErrorResponse
         {
             ErrorType = "UserNotFound",
-            Message = "O usuário com o nome fornecido não foi encontrado."
+            Message = "The user with the provided name was not found."
         });
-
     }
+
     /// <summary>
-    /// Cria um novo usuário no sistema.
+    /// Creates a new user in the system.
     /// </summary>
-    /// <param name="user">Dados do usuário a ser criado.</param>
-    /// <returns>O usuário recém-criado.</returns>
-    /// <response code="201">Usuário criado com sucesso.</response>
-    /// <response code="400">Erro ao criar o usuário, o corpo da requisição está vazio.</response>
-    /// <response code="422">Erro ao criar o usuário, devido a problemas de validação ou duplicidade.</response>
+    /// <param name="user">Data of the user to be created.</param>
+    /// <returns>The newly created user.</returns>
+    /// <response code="201">User successfully created.</response>
+    /// <response code="400">Error creating the user, the request body is empty.</response>
+    /// <response code="422">Error creating the user due to validation or duplication issues.</response>
     [HttpPost]
     [AllowAnonymous]
     [ProducesResponseType(typeof(UserResponse), 201)]
@@ -82,14 +79,12 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), 422)]
     public async Task<IActionResult> AddUser([FromBody] UserAddRequest user)
     {
-
         if (user == null)
             return BadRequest(new ErrorResponse()
             {
                 ErrorType = "EmptyUserAddRequest",
-                Message = "A solicitação de adição de usuário não pode ser nula."
+                Message = "The user addition request cannot be null."
             });
-
 
         try
         {
@@ -100,7 +95,7 @@ public class UsersController : ControllerBase
             return UnprocessableEntity(new ErrorResponse
             {
                 ErrorType = "ValidationError",
-                Message = $"Erro de validação: {ex.Message}"
+                Message = $"Validation error: {ex.Message}"
             });
         }
         catch (ExistingUserException ex)
@@ -108,7 +103,7 @@ public class UsersController : ControllerBase
             return UnprocessableEntity(new ErrorResponse
             {
                 ErrorType = "UserCreationError",
-                Message = $"Erro ao criar o usuário: {ex.Message}"
+                Message = $"Error creating the user: {ex.Message}"
             });
         }
 
@@ -116,13 +111,13 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Exclui o usuário correspondente ao nome fornecido.
+    /// Deletes the user corresponding to the provided name.
     /// </summary>
-    /// <param name="userName">Nome do usuário a ser excluído.</param>
-    /// <returns>Status indicando o resultado da operação.</returns>
-    /// <response code="204">Usuário excluído com sucesso.</response>
-    /// <response code="403">Não autorizado o acesso ao recurso.</response>
-    /// <response code="404">Usuário com o nome fornecido não encontrado.</response>
+    /// <param name="userName">Name of the user to be deleted.</param>
+    /// <returns>Status indicating the result of the operation.</returns>
+    /// <response code="204">User successfully deleted.</response>
+    /// <response code="403">Access to the resource is forbidden.</response>
+    /// <response code="404">User with the provided name not found.</response>
     [HttpDelete("{userName}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(403)]
@@ -132,7 +127,7 @@ public class UsersController : ControllerBase
         var userToRemove = await _userService.GetUserByNameAsync(userName);
 
         var userNameFromToken = HttpContext.Items["User"] as string;
-        
+
         if (userNameFromToken != userName)
         {
             return Forbid();
@@ -142,9 +137,8 @@ public class UsersController : ControllerBase
             return NotFound(new ErrorResponse
             {
                 ErrorType = "UserNotFound",
-                Message = "O usuário com o nome fornecido não foi encontrado."
+                Message = "The user with the provided name was not found."
             });
-
 
         await _userService.RemoveUserAsync(userToRemove);
 
@@ -152,16 +146,16 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Atualiza um usuário existente com base no nome fornecido.
+    /// Updates an existing user based on the provided name.
     /// </summary>
-    /// <param name="userName">Nome do usuário a ser atualizado.</param>
-    /// <param name="user">Dados atualizados do usuário.</param>
-    /// <returns>Status indicando o resultado da operação.</returns>
-    /// <response code="204">Usuário atualizado com sucesso.</response>
-    /// <response code="403">Não autorizado o acesso ao recurso.</response>
-    /// <response code="404">Usuário com o nome fornecido não encontrado.</response>
-    /// <response code="400">Erro ao criar o usuário, o corpo da requisição está vazio.</response>
-    /// <response code="422">Erro ao criar o usuário, devido a problemas de validação ou duplicidade.</response>
+    /// <param name="userName">Name of the user to be updated.</param>
+    /// <param name="user">Updated user data.</param>
+    /// <returns>Status indicating the result of the operation.</returns>
+    /// <response code="204">User successfully updated.</response>
+    /// <response code="403">Access to the resource is forbidden.</response>
+    /// <response code="404">User with the provided name not found.</response>
+    /// <response code="400">Error updating the user, the request body is empty.</response>
+    /// <response code="422">Error updating the user due to validation or duplication issues.</response>
     [HttpPut("{userName}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
@@ -174,9 +168,8 @@ public class UsersController : ControllerBase
             return BadRequest(new ErrorResponse()
             {
                 ErrorType = "EmptyUserUpdateRequest",
-                Message = "A solicitação de atualização de usuário não pode ser nula."
+                Message = "The user update request cannot be null."
             });
-
 
         User? updatedUser;
 
@@ -197,7 +190,7 @@ public class UsersController : ControllerBase
             return UnprocessableEntity(new ErrorResponse
             {
                 ErrorType = "ValidationError",
-                Message = $"Erro de validação: {ex.Message}"
+                Message = $"Validation error: {ex.Message}"
             });
         }
         catch (ExistingUserException ex)
@@ -205,7 +198,7 @@ public class UsersController : ControllerBase
             return UnprocessableEntity(new ErrorResponse
             {
                 ErrorType = "UserUpdateError",
-                Message = $"Erro ao atualizar o usuário: {ex.Message}"
+                Message = $"Error updating the user: {ex.Message}"
             });
         }
 
@@ -213,7 +206,7 @@ public class UsersController : ControllerBase
             return NotFound(new ErrorResponse
             {
                 ErrorType = "UserNotFound",
-                Message = "O usuário com o nome fornecido não foi encontrado."
+                Message = "The user with the provided name was not found."
             });
 
         return NoContent();

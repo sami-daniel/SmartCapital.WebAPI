@@ -1,11 +1,9 @@
-﻿// none
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SmartCapital.WebAPI.Models
 {
     /// <summary>
-    /// Modelo usado como resposta para erros nos endpoints dos controladores.
+    /// Model used as a response for errors in controller endpoints.
     /// </summary>
     public class ErrorResponse
     {

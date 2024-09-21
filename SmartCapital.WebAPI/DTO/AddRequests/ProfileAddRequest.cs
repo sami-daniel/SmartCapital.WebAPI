@@ -1,39 +1,37 @@
-﻿// none
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using SmartCapital.WebAPI.Domain.Domain;
 
 namespace SmartCapital.WebAPI.DTO.AddRequests
 {
     /// <summary>
-    /// Representa uma solicitação para adicionar um novo perfil.
+    /// Represents a request to add a new profile.
     /// </summary>
     public class ProfileAddRequest
     {
         /// <summary>
-        /// Nome do perfil. Deve ter no máximo 255 caracteres.
+        /// Profile name. Must be a maximum of 255 characters.
         /// </summary>
         /// <remarks>
-        /// Este campo é obrigatório e não pode ser nulo.
+        /// This field is required and cannot be null.
         /// </remarks>
         [Required]
-        [StringLength(255, ErrorMessage = "O tamanho do Nome do Perfil não pode exceder {0} caracteres")]
-        [RegularExpression("^[a-zA-Z0-9 ]*$", ErrorMessage = "O Nome do Perfil pode conter somente letras e números.")]
+        [StringLength(255, ErrorMessage = "The Profile Name length cannot exceed {0} characters")]
+        [RegularExpression("^[a-zA-Z0-9 ]*$", ErrorMessage = "The Profile Name can only contain letters and numbers.")]
         public string ProfileName { get; set; } = null!;
 
         /// <summary>
-        /// Saldo inicial do perfil. Deve estar dentro do intervalo permitido de 0 a 999.999.999,99.
+        /// Initial balance of the profile. Must be within the allowed range of 0 to 999,999,999.99.
         /// </summary>
         /// <remarks>
-        /// Este campo é opcional e pode ser nulo.
+        /// This field is optional and can be null.
         /// </remarks>
-        [Range(0d, 999_999_999.99d, ErrorMessage = "O tamanho do Saldo Inicial do Perfil não pode ser maior que {1}.")]
+        [Range(0d, 999_999_999.99d, ErrorMessage = "The Profile Opening Balance cannot be greater than {1}.")]
         public decimal? ProfileOpeningBalance { get; set; }
 
         /// <summary>
-        /// Converte a instância atual de <see cref="ProfileAddRequest"/> em uma instância de <see cref="Profile"/>.
+        /// Converts the current instance of <see cref="ProfileAddRequest"/> to an instance of <see cref="Profile"/>.
         /// </summary>
-        /// <returns>Uma nova instância de <see cref="Profile"/> com os dados do perfil.</returns>
+        /// <returns>A new instance of <see cref="Profile"/> with the profile data.</returns>
         public Profile ToProfile()
         {
             return new Profile
