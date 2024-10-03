@@ -110,12 +110,13 @@ public class Program
 
         var app = builder.Build();
 
+# if DEBUG
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+# endif
         app.UseHttpsRedirection();
 
         app.UseCors(opt => opt
