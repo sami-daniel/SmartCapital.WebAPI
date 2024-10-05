@@ -19,7 +19,7 @@ using SmartCapital.WebAPI.OperationFilters;
 
 namespace SmartCapital.WebAPI;
 
-public class mProgram
+public class Program
 {
     public static void Main(string[] args)
     {
