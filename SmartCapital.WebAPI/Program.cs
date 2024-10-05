@@ -19,7 +19,7 @@ using SmartCapital.WebAPI.OperationFilters;
 
 namespace SmartCapital.WebAPI;
 
-public class Program
+public class mProgram
 {
     public static void Main(string[] args)
     {
@@ -96,16 +96,10 @@ public class Program
         });
 
         // Registering services of DataAcess
-
-#warning The application does not ensure the existence of the database, only its connection string
-#if DEBUG
-        builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlite(builder.Configuration["ConnectionStrings:SmartCapitalDatabaseDebugMode"] ??
-                                                            throw new InvalidOperationException("A string de conexão não esta definida.")));
-# else
         builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(builder.Configuration["ConnectionStrings:SmartCapitalDatabaseProductionMode"] ??
                                                             throw new InvalidOperationException("A string de conexão não esta definida."),
                                                             new MySqlServerVersion(new Version(8, 4, 0))));
-#endif
+
         // Repostories and UnitOfWork
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
